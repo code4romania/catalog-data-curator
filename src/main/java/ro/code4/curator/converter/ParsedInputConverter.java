@@ -5,12 +5,15 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import org.springframework.stereotype.Component;
 import ro.code4.curator.transferObjects.ParsedInputTO;
 import ro.code4.curator.entity.ParsedInput;
 import ro.code4.curator.entity.ParsedInputField;
 import ro.code4.curator.transferObjects.ParsedInputFieldTO;
 
+@Component
 public class ParsedInputConverter {
+
 	private static Logger LOGGER = Logger.getLogger(ParsedInputConverter.class);
 
 	public ParsedInput convertTOtoEntity(ParsedInputTO to) {

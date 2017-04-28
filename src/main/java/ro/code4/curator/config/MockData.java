@@ -12,6 +12,7 @@ import ro.code4.curator.repository.ReviewedInputRepository;
 import ro.code4.curator.repository.UserRepository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 
 /**
  * On app startup, insert some dummy data to be able to easily test the UI
@@ -28,9 +29,11 @@ public class MockData {
     ReviewedInputRepository reviewedInputRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
-    private User testUser = new User("user", "password");
+    public User testUser = new User("user", "password");
+    public ArrayList<ParsedInput> mockParsedInputs = new ArrayList<>();
+    public ArrayList<ReviewedInput> mockReviewedInputs = new ArrayList<>();
 
     @PostConstruct
     public void initDummyData() {
@@ -41,10 +44,12 @@ public class MockData {
         ParsedInput entity = new ParsedInput();
         entity.setFullText("this is full text parsed");
         parsedInputRepository.save(entity);
+        mockParsedInputs.add(entity);
 
         ReviewedInput entity1 = new ReviewedInput();
         entity1.setFullText("this is full text reviewed");
         reviewedInputRepository.save(entity1);
+        mockReviewedInputs.add(entity1);
     }
 
     public User getTestUser() {

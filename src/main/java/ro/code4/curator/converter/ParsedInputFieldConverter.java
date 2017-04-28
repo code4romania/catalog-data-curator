@@ -1,9 +1,12 @@
 package ro.code4.curator.converter;
 
+import org.springframework.stereotype.Component;
 import ro.code4.curator.entity.ParsedInputField;
 import ro.code4.curator.transferObjects.ParsedInputFieldTO;
 
+@Component
 public class ParsedInputFieldConverter {
+
 	public ParsedInputField convertTOtoEntity(ParsedInputFieldTO to) {
 		ParsedInputField result = new ParsedInputField();
 

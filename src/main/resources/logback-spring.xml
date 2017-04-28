@@ -37,38 +37,11 @@
 
 	<logger name="ro.code4.textParserReview" level="INFO" />
 
-	<logger name="javax.activation" level="WARN" />
-	<logger name="javax.mail" level="WARN" />
-	<logger name="javax.xml.bind" level="WARN" />
-	<logger name="ch.qos.logback" level="WARN" />
-	<logger name="com.sun.xml.internal.bind" level="WARN" />
-	<logger name="com.zaxxer" level="WARN" />
-	<logger name="io.undertow" level="ERROR" />
-	<logger name="org.apache" level="ERROR" />
-	<logger name="org.bson" level="WARN" />
-	<logger name="org.crsh" level="WARN" />
-	<logger name="org.jboss.logging" level="WARN" />
-	<logger name="org.hibernate" level="WARN" />
-	<logger name="org.hibernate.orm.deprecation" level="OFF" />
-	<logger name="org.hibernate.tool.hbm2ddl" level="OFF" />
-	<logger name="org.springframework" level="WARN" />
-	<logger name="org.thymeleaf" level="WARN" />
-	<logger name="com.microsoft.sqlserver.jdbc" level="WARN" />
-	<logger name="org.xnio" level="ERROR" />
-	<logger name="sun.rmi.transport" level="WARN" />
-
-	<!-- added only to disable the log output from the org.apache.directory 
-		package -->
-	<logger name="JdbmTable" level="WARN" />
-	<logger name="JdbmIndex" level="WARN" />
-	<logger name="LOG_CHANGES" level="WARN" />
-	<logger name="org.apache.directory" level="OFF" />
-
 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
 		<resetJUL>true</resetJUL>
 	</contextListener>
 
-	<root level="${logback.loglevel}">
+	<root level="info">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="ASYNC" />
 	</root>
