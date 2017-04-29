@@ -33,7 +33,9 @@ public class SimpleUserRepositoryAuthenticationProvider implements Authenticatio
             if (userAcc != null && userAcc.getPassword().equals(pass))
                 return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
                         authentication.getCredentials(),
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+                        Arrays.asList(
+                                new SimpleGrantedAuthority("ROLE_USER"),
+                                new SimpleGrantedAuthority("ROLE_ACTUATOR")));
         }
 
         return null;

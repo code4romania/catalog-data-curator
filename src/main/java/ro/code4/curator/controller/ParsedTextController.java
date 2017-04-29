@@ -19,25 +19,34 @@ import ro.code4.curator.transferObjects.ParsedInputTO;
 @RequestMapping("/input/parsed")
 public class ParsedTextController {
 
-	@Autowired
-	private ParsedInputService parsedInputService;
+    @Autowired
+    private ParsedInputService parsedInputService;
 
-	@ApiOperation(value = "createOrUpdate")
-	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody HttpStatus acceptParsedText(@RequestBody ParsedInputTO input) {
-		parsedInputService.acceptTextParsing(input);
-		return HttpStatus.OK;
-	}
+    @ApiOperation(value = "createOrUpdate")
+    @RequestMapping(method = RequestMethod.POST)
+    public @ResponseBody
+    ParsedInputTO acceptParsedText(@RequestBody ParsedInputTO input) {
+        return parsedInputService.acceptTextParsing(input);
+    }
 
-	@ApiOperation(value = "getAll")
-	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody List<ParsedInputTO> getAll() {
-		return parsedInputService.list();
-	}
+    @ApiOperation(value = "getAll")
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody
+    List<ParsedInputTO> getAll() {
+        return parsedInputService.list();
+    }
 
-	@ApiOperation(value = "getById")
-	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public @ResponseBody ParsedInputTO getById(@PathVariable int id) {
-		return parsedInputService.getById(id);
-	}
+    @ApiOperation(value = "getById")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    public @ResponseBody
+    ParsedInputTO getById(@PathVariable int id) {
+        return parsedInputService.getById(id);
+    }
+
+    @ApiOperation(value = "deleteById")
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody
+    void deleteById(@PathVariable int id) {
+        parsedInputService.deleteById(id);
+    }
 }

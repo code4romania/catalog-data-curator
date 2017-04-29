@@ -17,88 +17,98 @@ import ro.code4.curator.transferObjects.ParsedInputTO;
 @Service
 public class ParsedInputService {
 
-	@Autowired
-	private ParsedInputRepository parsedInputRepo;
+    @Autowired
+    private ParsedInputRepository parsedInputRepo;
 
-	public void acceptTextParsing(ParsedInputTO parsedInputTO) {
-		String textType = parsedInputTO.getTextType();
-		String textSourceId = parsedInputTO.getTextSourceId();
+    @Autowired
+    private ParsedInputFieldConverter fieldConverter;
 
-		List<ParsedInput> others = parsedInputRepo.findByTextTypeAndTextSourceId(textType, textSourceId);
+    @Autowired
+    private ParsedInputConverter inputConverter;
 
-		// check if there is already a parse input for the same type and source ID
-		if (others.size() == 1) {
-			ParsedInput existingParsedInput = others.get(0);
 
-			// check if the full text is matching
-			if (!existingParsedInput.getFullText().trim().equals(parsedInputTO.getFullText().trim()))
-				throw new IllegalArgumentException("The full text does not match for type=|" + textType + "| and sourceId=|" + textSourceId
-						+ "|. The new input cannot be accepted because start and end indices will not match.\nExisting full text: "
-						+ existingParsedInput.getFullText().trim() + "\nNew input full text: " + parsedInputTO.getFullText().trim());
+    public ParsedInputTO acceptTextParsing(ParsedInputTO parsedInputTO) {
+        String textType = parsedInputTO.getTextType();
+        String textSourceId = parsedInputTO.getTextSourceId();
 
-			// for each field, look for matching interpretations
-			for (ParsedInputFieldTO fieldTO : parsedInputTO.getParsedFields()) {
-				boolean matched = false;
+        List<ParsedInput> others = parsedInputRepo.findByTextTypeAndTextSourceId(textType, textSourceId);
 
-				for (ParsedInputField existingField : existingParsedInput.getParsedFields()) {
-					if (fieldTO.getFieldName().equals(existingField.getFieldName())) {
-						// match if the value, start pos and end pos are the same
-						String newValue = fieldTO.getParsedValue();
-						int newStartPos = fieldTO.getStartPos();
-						int newEndPos = fieldTO.getEndPos();
-						String value = existingField.getParsedValue();
-						int startPos = existingField.getStartPos();
-						int endPos = existingField.getEndPos();
+        // check if there is already a parse input for the same type and source ID
+        if (others.size() == 1) {
+            ParsedInput existingParsedInput = others.get(0);
 
-						if (newValue.equalsIgnoreCase(value) && newStartPos == startPos && newEndPos == endPos) {
-							// matched; increase votes count
-							existingField.setVotes(existingField.getVotes() + 1);
-							matched = true;
-						}
-					}
-				}
+            // check if the full text is matching
+            if (!existingParsedInput.getFullText().trim().equals(parsedInputTO.getFullText().trim()))
+                throw new IllegalArgumentException("The full text does not match for type=|" + textType + "| and sourceId=|" + textSourceId
+                        + "|. The new input cannot be accepted because start and end indices will not match.\nExisting full text: "
+                        + existingParsedInput.getFullText().trim() + "\nNew input full text: " + parsedInputTO.getFullText().trim());
 
-				if (!matched) {
-					// if not matched, create another field entry on the same parsed input
-					ParsedInputFieldConverter converter = new ParsedInputFieldConverter();
-					ParsedInputField field = converter.convertTOtoEntity(fieldTO);
-					existingParsedInput.getParsedFields().add(field);
-				}
-			}
+            // for each field, look for matching interpretations
+            for (ParsedInputFieldTO fieldTO : parsedInputTO.getParsedFields()) {
+                boolean matched = false;
 
-			// save all updates to the existing parsed input entry; cascades
-			parsedInputRepo.save(existingParsedInput);
-		} else if (others.size() > 1) {
-			// more than one match, this is an anomaly
-			throw new IllegalStateException("More than one parse input found for type=|" + textType + "| and sourceId=|" + textSourceId
-					+ "|. This is an anomaly, that needss to be corrected before submitting new parse results");
-		} else { // no match
-			ParsedInputConverter converter = new ParsedInputConverter();
+                for (ParsedInputField existingField : existingParsedInput.getParsedFields()) {
+                    if (fieldTO.getFieldName().equals(existingField.getFieldName())) {
+                        // match if the value, start pos and end pos are the same
+                        String newValue = fieldTO.getParsedValue();
+                        int newStartPos = fieldTO.getStartPos();
+                        int newEndPos = fieldTO.getEndPos();
+                        String value = existingField.getParsedValue();
+                        int startPos = existingField.getStartPos();
+                        int endPos = existingField.getEndPos();
 
-			// for each field, create an interpretation with 1 vote
-			ParsedInput parsedInput = converter.convertTOtoEntity(parsedInputTO);
-			for (ParsedInputField field : parsedInput.getParsedFields()) {
-				field.setVotes(1);
-			}
+                        if (newValue.equalsIgnoreCase(value) && newStartPos == startPos && newEndPos == endPos) {
+                            // matched; increase votes count
+                            existingField.setVotes(existingField.getVotes() + 1);
+                            matched = true;
+                        }
+                    }
+                }
 
-			// save all; cascades on fields
-			parsedInputRepo.save(parsedInput);
-		}
-	}
+                if (!matched) {
+                    // if not matched, create another field entry on the same parsed input
+                    ParsedInputField field = fieldConverter.convertTOtoEntity(fieldTO);
+                    existingParsedInput.getParsedFields().add(field);
+                }
+            }
 
-	public List<ParsedInputTO> list() {
-		List<ParsedInputTO> result = new ArrayList<>();
-		ParsedInputConverter converter = new ParsedInputConverter();
+            // save all updates to the existing parsed input entry; cascades
+            return inputConverter.convertEntityToTO(parsedInputRepo.save(existingParsedInput));
+        } else if (others.size() > 1) {
+            // more than one match, this is an anomaly
+            throw new IllegalStateException("More than one parse input found for type=|" + textType + "| and sourceId=|" + textSourceId
+                    + "|. This is an anomaly, that needss to be corrected before submitting new parse results");
+        } else { // no match
+            ParsedInputConverter converter = new ParsedInputConverter();
 
-		for (ParsedInput entity : parsedInputRepo.findAll())
-			result.add(converter.convertEntityToTO(entity));
+            // for each field, create an interpretation with 1 vote
+            ParsedInput parsedInput = converter.convertTOtoEntity(parsedInputTO);
+            for (ParsedInputField field : parsedInput.getParsedFields()) {
+                field.setVotes(1);
+            }
 
-		return result;
-	}
+            // save all; cascades on fields
+            return inputConverter.convertEntityToTO(parsedInputRepo.save(parsedInput));
+        }
+    }
 
-	public ParsedInputTO getById(int id) {
-		ParsedInputConverter converter = new ParsedInputConverter();
-		ParsedInput parsedInput = parsedInputRepo.findOne(id);
-		return converter.convertEntityToTO(parsedInput);
-	}
+    public List<ParsedInputTO> list() {
+        List<ParsedInputTO> result = new ArrayList<>();
+
+        for (ParsedInput entity : parsedInputRepo.findAll())
+            result.add(inputConverter.convertEntityToTO(entity));
+
+        return result;
+    }
+
+    public ParsedInputTO getById(int id) {
+        ParsedInput parsedInput = parsedInputRepo.findOne(id);
+        if (parsedInput == null)
+            return null;
+        return inputConverter.convertEntityToTO(parsedInput);
+    }
+
+    public void deleteById(int id) {
+        parsedInputRepo.delete(id);
+    }
 }

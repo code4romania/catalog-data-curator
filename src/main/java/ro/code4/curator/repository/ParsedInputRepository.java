@@ -10,5 +10,5 @@ import ro.code4.curator.entity.ParsedInput;
 
 @Repository
 public interface ParsedInputRepository extends CrudRepository<ParsedInput, Serializable> {
-	public List<ParsedInput> findByTextTypeAndTextSourceId(String textType, String textSourceId);
+	List<ParsedInput> findByTextTypeAndTextSourceId(String textType, String textSourceId);
 }
