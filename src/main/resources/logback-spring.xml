@@ -35,8 +35,6 @@
 		<appender-ref ref="FILE" />
 	</appender>
 
-	<logger name="ro.code4.textParserReview" level="INFO" />
-
 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
 		<resetJUL>true</resetJUL>
 	</contextListener>
