@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ro.code4.curator.config.MockData;
+import ro.code4.curator.converter.FileUtils;
+import ro.code4.curator.converter.JsonUtils;
 import ro.code4.curator.entity.ParsedInput;
 import ro.code4.curator.transferObjects.ParsedInputTO;
 
@@ -56,6 +58,10 @@ public class ParsedTextControllerIntegrationTest {
                     ParsedInputTO[] results = parseJsonArray(getContentAsString(result));
                     assertEquals("all test data should be retrieved",
                             testData.mockParsedInputs.size(), results.length);
+                    assertEquals("all test data should be retrieved",
+                            2, results.length);
+                    assertTrue("all parsed fields should be returned",
+                            results[0].getParsedFields().size() > 0);
                 })
                 .andExpect(status().isOk());
     }
@@ -90,8 +96,7 @@ public class ParsedTextControllerIntegrationTest {
     @Test
     @WithMockUser
     public void postThenGetFinding_verifyValidDataIsPersisted() throws Exception {
-        File file = getFile("/testData/parsedInput_DIICOT_1100_parser1.json");
-        ParsedInputTO originalFinding = new ObjectMapper().readValue(file, ParsedInputTO.class);
+        ParsedInputTO originalFinding = JsonUtils.parseJsonObj(FileUtils.readFile("/testData/parsedInput_DIICOT_1100_parser1.json"), ParsedInputTO.class);
         final ParsedInputTO[] persistedFinding = {null};
         final ParsedInputTO[] foundFinding = {null};
 
@@ -117,6 +122,8 @@ public class ParsedTextControllerIntegrationTest {
                 foundFinding[0], persistedFinding[0]);
         assertEquals("all equal except entityId",
                 foundFinding[0].getFullText(), originalFinding.getFullText());
+        assertEquals("all equal except entityId",
+                3, foundFinding[0].getParsedFields().size());
         assertEquals("all equal except entityId",
                 foundFinding[0].getParsedFields(), originalFinding.getParsedFields());
         assertEquals("all equal except entityId",

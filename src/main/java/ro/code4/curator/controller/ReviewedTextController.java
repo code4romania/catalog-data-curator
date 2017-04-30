@@ -22,7 +22,7 @@ public class ReviewedTextController {
     @ApiOperation(value = "createOrUpdate")
     @RequestMapping(method = RequestMethod.POST, path = "/{id}")
     public @ResponseBody
-    ParsedInputTO submitReviewedInput(@PathVariable("id") String id,
+    ParsedInputTO submitReviewedInput(@PathVariable("id") int id,
                                       @RequestBody ParsedInputTO reviewedInput) {
         return reviewedInputService.submitReviewedInput(id, reviewedInput);
     }

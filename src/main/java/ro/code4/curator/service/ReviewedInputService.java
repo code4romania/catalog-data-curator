@@ -30,7 +30,7 @@ public class ReviewedInputService {
     private ReviewedInputConverter converter = new ReviewedInputConverter();
 
 
-    public ParsedInputTO submitReviewedInput(String parsedInputId, ParsedInputTO reviewedInputTO) {
+    public ParsedInputTO submitReviewedInput(int parsedInputId, ParsedInputTO reviewedInputTO) {
         // check if there is already a reviewed input entry for this textType + id
         String textType = reviewedInputTO.getTextType();
         String sourceId = reviewedInputTO.getTextSourceId();
@@ -42,14 +42,14 @@ public class ReviewedInputService {
                     "A reviewed record for this object already exists. Sending updates to reviewed instances is not supported at this time.");
         } else {
             // if not, convert to an entity
-            ReviewedInput entity = converter.convertTOtoEntity(reviewedInputTO);
+            ReviewedInput entity = converter.toEntity(reviewedInputTO);
 
             // and save it
             ReviewedInput saved = reviewedInputRepo.save(entity);
             entity = reviewedInputRepo.findByTextTypeAndTextSourceId(textType, sourceId);
 
             // mark the parsed input as reviewed
-            ParsedInput parsedInput = parsedInputRepository.findOne(Integer.valueOf(parsedInputId));
+            ParsedInput parsedInput = parsedInputRepository.findOne(parsedInputId);
             if (parsedInput == null)
                 throw new EntityNotFoundException(
                         "Entity id not found ! " + parsedInputId);
@@ -58,7 +58,7 @@ public class ReviewedInputService {
             parsedInput.setReviewedInputId(entity.getId());
             parsedInputRepository.save(parsedInput);
 
-            return converter.convertEntityToTO(saved);
+            return converter.toTO(saved);
         }
     }
 
@@ -68,14 +68,14 @@ public class ReviewedInputService {
 
         // for each entity, pick only the shallow copy
         for (ReviewedInput entity : reviewedInputList)
-            result.add(converter.convertEntityToShallowTO(entity));
+            result.add(converter.toShallowTO(entity));
 
         return result;
     }
 
     public ShallowReviewedInputTO getById(String id) {
         ReviewedInput entity = reviewedInputRepo.findOne(Integer.valueOf(id));
-        return converter.convertEntityToShallowTO(entity);
+        return converter.toShallowTO(entity);
     }
 
     public void deleteById(String id) {

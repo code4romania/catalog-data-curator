@@ -17,7 +17,7 @@ public class ReviewedInputConverter {
 
 	private static Logger LOGGER = Logger.getLogger(ReviewedInputConverter.class);
 
-	public ReviewedInput convertTOtoEntity(ParsedInputTO to) {
+	public ReviewedInput toEntity(ParsedInputTO to) {
 		ReviewedInput result = new ReviewedInput();
 
 		// set own properties
@@ -30,7 +30,7 @@ public class ReviewedInputConverter {
 		Map<ParsedInputFieldTO, ReviewedInputField> fieldsMapping = new HashMap<>();
 		ReviewedInputFieldConverter fieldConverter = new ReviewedInputFieldConverter();
 		for (ParsedInputFieldTO fieldTO : to.getParsedFields()) {
-			ReviewedInputField convertedField = fieldConverter.convertTOtoEntity(fieldTO);
+			ReviewedInputField convertedField = fieldConverter.toEntity(fieldTO);
 			convertedField.setReviewedInputId(result);
 			result.getReviewedFields().add(convertedField);
 			fieldsMapping.put(fieldTO, convertedField);
@@ -57,7 +57,7 @@ public class ReviewedInputConverter {
 		return result;
 	}
 
-	public ParsedInputTO convertEntityToTO(ReviewedInput entity) {
+	public ParsedInputTO toTO(ReviewedInput entity) {
 		ParsedInputTO result = new ParsedInputTO();
 
 		// set own properties
@@ -69,14 +69,14 @@ public class ReviewedInputConverter {
 		// set parsed input fields
 		ReviewedInputFieldConverter fieldConverter = new ReviewedInputFieldConverter();
 		for (ReviewedInputField field : entity.getReviewedFields()) {
-			ParsedInputFieldTO fieldTO = fieldConverter.convertEntityToTO(field);
+			ParsedInputFieldTO fieldTO = fieldConverter.toTO(field);
 			result.getParsedFields().add(fieldTO);
 		}
 
 		return result;
 	}
 
-	public ShallowReviewedInputTO convertEntityToShallowTO(ReviewedInput entity) {
+	public ShallowReviewedInputTO toShallowTO(ReviewedInput entity) {
 		ShallowReviewedInputTO result = new ShallowReviewedInputTO();
 
 		result.setId(entity.getId());

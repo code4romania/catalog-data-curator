@@ -1,10 +1,13 @@
 package ro.code4.curator.converter;
 
+import org.springframework.stereotype.Component;
 import ro.code4.curator.entity.ReviewedInputField;
 import ro.code4.curator.transferObjects.ParsedInputFieldTO;
 
+@Component
 public class ReviewedInputFieldConverter {
-	public ReviewedInputField convertTOtoEntity(ParsedInputFieldTO to) {
+
+	public ReviewedInputField toEntity(ParsedInputFieldTO to) {
 		ReviewedInputField result = new ReviewedInputField();
 
 		result.setFieldName(to.getFieldName());
@@ -16,7 +19,7 @@ public class ReviewedInputFieldConverter {
 		return result;
 	}
 
-	public ParsedInputFieldTO convertEntityToTO(ReviewedInputField entity) {
+	public ParsedInputFieldTO toTO(ReviewedInputField entity) {
 		ParsedInputFieldTO to = new ParsedInputFieldTO();
 
 		to.setFieldName(entity.getFieldName());

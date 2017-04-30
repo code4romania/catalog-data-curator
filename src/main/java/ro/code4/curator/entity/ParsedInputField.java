@@ -1,123 +1,89 @@
 package ro.code4.curator.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang.ObjectUtils;
+import ro.code4.curator.transferObjects.ParsedInputFieldTO;
+
+import javax.persistence.*;
 
 @Entity
-@ToString
 @EqualsAndHashCode
+@Data
 public class ParsedInputField {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
-	@ManyToOne
-	private ParsedInput parsedInputId;
+    @ManyToOne
+    private ParsedInput parsedInputId;
 
-	@OneToOne
-	private ParsedInputField parentField;
+    @OneToOne
+    private ParsedInputField parentField;
 
-	private String fieldName;
-	private int startPos;
-	private int endPos;
-	private String parsedValue;
-	private double votes;
-	private String parserId;
+    private String fieldName;
+    private int startPos;
+    private int endPos;
+    @Lob
+    private String parsedValue;
+    private double votes;
+    private String parserId;
 
-	public ParsedInputField() {
-	}
+    public ParsedInputField() {
+    }
 
-	public ParsedInputField(int id, ParsedInput parsedInputId, ParsedInputField parentField, String fieldName, int startPos, int endPos,
-			String parsedValue, double votes, String parserId) {
-		super();
-		this.id = id;
-		this.parsedInputId = parsedInputId;
-		this.parentField = parentField;
-		this.fieldName = fieldName;
-		this.startPos = startPos;
-		this.endPos = endPos;
-		this.parsedValue = parsedValue;
-		this.votes = votes;
-		this.parserId = parserId;
-	}
+    public ParsedInputField(int id, ParsedInput parsedInputId, ParsedInputField parentField, String fieldName, int startPos, int endPos,
+                            String parsedValue, double votes, String parserId) {
+        super();
+        this.id = id;
+        this.parsedInputId = parsedInputId;
+        this.parentField = parentField;
+        this.fieldName = fieldName;
+        this.startPos = startPos;
+        this.endPos = endPos;
+        this.parsedValue = parsedValue;
+        this.votes = votes;
+        this.parserId = parserId;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public boolean isFieldContentAndPositionMatch(ParsedInputFieldTO newField) {
+        // match if the value, start pos and end pos are the same
+        return newField.getFieldName().equals(getFieldName())
+                && newField.getParsedValue().equalsIgnoreCase(getParsedValue())
+                && newField.getStartPos() == getStartPos()
+                && newField.getEndPos() == getEndPos();
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void incrVotes() {
+        setVotes(getVotes() + 1);
+    }
 
-	public ParsedInput getParsedInputParent() {
-		return parsedInputId;
-	}
+    @Override
+    public String toString() {
+        // avoid parent circular ref
+        return "ParsedInputField{" +
+                "id=" + id +
+                ", parsedInputId='" + getParentInpuIdIfNotNull() + '\'' +
+                ", parentFieldId='" + getParentFieldIdIfNotNull() + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", startPos=" + startPos +
+                ", endPos=" + endPos +
+                ", parsedValue='" + parsedValue + '\'' +
+                ", votes=" + votes +
+                ", parserId='" + parserId + '\'' +
+                '}';
+    }
 
-	public void setParsedInputParent(ParsedInput parsedInputParent) {
-		this.parsedInputId = parsedInputParent;
-	}
+    private Integer getParentFieldIdIfNotNull() {
+        if (parentField == null)
+            return null;
+        return parentField.getId();
+    }
 
-	public ParsedInputField getParentField() {
-		return parentField;
-	}
-
-	public void setParentField(ParsedInputField parentField) {
-		this.parentField = parentField;
-	}
-
-	public String getFieldName() {
-		return fieldName;
-	}
-
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
-	}
-
-	public int getStartPos() {
-		return startPos;
-	}
-
-	public void setStartPos(int startPos) {
-		this.startPos = startPos;
-	}
-
-	public int getEndPos() {
-		return endPos;
-	}
-
-	public void setEndPos(int endPos) {
-		this.endPos = endPos;
-	}
-
-	public String getParsedValue() {
-		return parsedValue;
-	}
-
-	public void setParsedValue(String parsedValue) {
-		this.parsedValue = parsedValue;
-	}
-
-	public double getVotes() {
-		return votes;
-	}
-
-	public void setVotes(double votes) {
-		this.votes = votes;
-	}
-
-	public String getParserId() {
-		return parserId;
-	}
-
-	public void setParserId(String parserId) {
-		this.parserId = parserId;
-	}
-
+    private Integer getParentInpuIdIfNotNull() {
+        if (parsedInputId == null)
+            return null;
+        return parsedInputId.getId();
+    }
 }

@@ -1,17 +1,11 @@
 package ro.code4.curator.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,10 +14,11 @@ public class ReviewedInput {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+    @Lob
 	private String fullText;
 	private String textType;
 	private String textSourceId;
 
-	@OneToMany(mappedBy = "reviewedInputId", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "reviewedInputId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ReviewedInputField> reviewedFields = new ArrayList<>();
 }

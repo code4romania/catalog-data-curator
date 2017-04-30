@@ -7,7 +7,7 @@ import ro.code4.curator.transferObjects.ParsedInputFieldTO;
 @Component
 public class ParsedInputFieldConverter {
 
-	public ParsedInputField convertTOtoEntity(ParsedInputFieldTO to) {
+    public ParsedInputField toEntity(ParsedInputFieldTO to) {
 		ParsedInputField result = new ParsedInputField();
 
 		result.setFieldName(to.getFieldName());
@@ -19,7 +19,7 @@ public class ParsedInputFieldConverter {
 		return result;
 	}
 
-	public ParsedInputFieldTO convertEntityToTO(ParsedInputField entity) {
+	public ParsedInputFieldTO toTo(ParsedInputField entity) {
 		ParsedInputFieldTO to = new ParsedInputFieldTO();
 
 		to.setFieldName(entity.getFieldName());
