@@ -1,0 +1,28 @@
+{
+  "fullText": "Text comunicat DNA, facut de Radu Jakab, data 19.04.2017, de doi lei",
+  "parsedFields": [
+    {
+      "startPos": 29,
+      "endPos": 39,
+      "fieldName": "Nume",
+      "parsedValue": "Radu Jakab",
+      "parserId": "radu's scrapper"
+    },
+    {
+      "startPos": 46,
+      "endPos": 56,
+      "fieldName": "Data",
+      "parsedValue": "19.04.2017",
+      "parserId": "radu's scrapper"
+    },
+    {
+      "startPos": 61,
+      "endPos": 68,
+      "fieldName": "Suma",
+      "parsedValue": "doi lei",
+      "parserId": "radu's scrapper"
+    }
+  ],
+  "textSourceId": "1101",
+  "textType": "DNA"
+}

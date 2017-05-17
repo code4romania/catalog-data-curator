@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import ro.code4.curator.converter.FileUtils;
 import ro.code4.curator.converter.ParsedInputConverter;
@@ -18,7 +17,11 @@ import ro.code4.curator.service.ReviewedInputService;
 import ro.code4.curator.transferObjects.ParsedInputTO;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * On app startup, insert some dummy data to be able to easily test the UI
@@ -46,13 +49,16 @@ public class MockData {
     @Value("${test.data.enabled:false}")
     private boolean isEnabled = false;
 
+    @Value("${test.data.folder:./}")
+    private String testDataFolder;
+
     public User testUser = new User("user", "password");
-    public ArrayList<ParsedInput> mockParsedInputs = new ArrayList<>();
-    public ArrayList<ReviewedInput> mockReviewedInputs = new ArrayList<>();
+    public List<ParsedInput> mockParsedInputs = new ArrayList<>();
+    public List<ReviewedInput> mockReviewedInputs = new ArrayList<>();
 
     @PostConstruct
     public void initDummyData() {
-        if(!isEnabled) {
+        if (!isEnabled) {
             return;
         }
 
@@ -65,6 +71,9 @@ public class MockData {
     }
 
     private void addReviewedInput() {
+        if (mockParsedInputs.isEmpty())
+            return;
+
         // get initial parsing
         ParsedInput parsedInput = mockParsedInputs.get(0);
 
@@ -79,10 +88,24 @@ public class MockData {
 
     private void addParsedInput() {
         ParsedInput entity = null;
-        entity = ParsedInput.from(FileUtils.readFile("parsedInput_DNA_8118.json"));
-        add(entity);
-        entity = ParsedInput.from(FileUtils.readFile("parsedInput_DNA_8119.json"));
-        add(entity);
+        String path = getTestDataFolder();
+        Collection<File> files = org.apache.commons.io.FileUtils.listFiles(new File(path),
+                new String[]{"json"}, false);
+        Iterator<File> iterator = files.iterator();
+        while (iterator.hasNext()) {
+            String filePath = iterator.next().getAbsolutePath();
+            entity = ParsedInput.from(FileUtils.readFile(filePath));
+            add(entity);
+        }
+    }
+
+    private String getTestDataFolder() {
+        if (testDataFolder == null)
+            return "";
+
+        testDataFolder = testDataFolder.trim();
+
+        return MockData.class.getResource(testDataFolder).getFile();
     }
 
     private void add(ReviewedInput entity, ParsedInput input) {

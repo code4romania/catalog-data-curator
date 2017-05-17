@@ -27,11 +27,11 @@ public class ParsedInput {
 	@OneToMany(mappedBy = "parsedInputId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ParsedInputField> parsedFields = new ArrayList<>();
 
-	public static ParsedInput from(String json) {
+    public static ParsedInput from(String json) {
 		try {
 			return JsonUtils.parseJsonObj(json, ParsedInput.class);
 		} catch (IOException e) {
-			throw new RuntimeException("failed to parse json " + json);
+			throw new RuntimeException("failed to parse json " + json, e);
 		}
 	}
 

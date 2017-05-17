@@ -1,14 +1,7 @@
 package ro.code4.curator.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ro.code4.curator.converter.ReviewedInputConverter;
 import ro.code4.curator.entity.ParsedInput;
 import ro.code4.curator.entity.ReviewedInput;
@@ -16,6 +9,11 @@ import ro.code4.curator.repository.ParsedInputRepository;
 import ro.code4.curator.repository.ReviewedInputRepository;
 import ro.code4.curator.transferObjects.ParsedInputTO;
 import ro.code4.curator.transferObjects.ShallowReviewedInputTO;
+
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ReviewedInputService {
@@ -38,6 +36,7 @@ public class ReviewedInputService {
 
         if (existingEntity != null) {
             // if yes, throw exception for now
+            // TODO need to implement logic
             throw new EntityExistsException(
                     "A reviewed record for this object already exists. Sending updates to reviewed instances is not supported at this time.");
         } else {
