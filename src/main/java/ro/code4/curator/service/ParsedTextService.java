@@ -1,50 +1,53 @@
 package ro.code4.curator.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ro.code4.curator.converter.ParsedTextConverter;
+import ro.code4.curator.converter.ParsedTextFieldConverter;
+import ro.code4.curator.entity.ParsedText;
+import ro.code4.curator.entity.TextFinding;
+import ro.code4.curator.entity.ParsedTextManager;
+import ro.code4.curator.repository.ParsedTextRepository;
+import ro.code4.curator.transferObjects.ParsedTextFindingTO;
+import ro.code4.curator.transferObjects.ParsedTextTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import ro.code4.curator.converter.ParsedInputFieldConverter;
-import ro.code4.curator.converter.ParsedInputConverter;
-import ro.code4.curator.entity.ParsedInput;
-import ro.code4.curator.entity.ParsedInputField;
-import ro.code4.curator.repository.ParsedInputRepository;
-import ro.code4.curator.transferObjects.ParsedInputFieldTO;
-import ro.code4.curator.transferObjects.ParsedInputTO;
-
 @Service
-public class ParsedInputService {
+public class ParsedTextService implements ParsedTextManager {
 
     @Autowired
-    private ParsedInputRepository parsedInputRepo;
+    private ParsedTextRepository parsedInputRepo;
 
     @Autowired
-    private ParsedInputFieldConverter fieldConverter;
+    private ParsedTextFieldConverter fieldConverter = new ParsedTextFieldConverter();
 
     @Autowired
-    private ParsedInputConverter inputConverter;
+    private ParsedTextConverter inputConverter = new ParsedTextConverter();
 
-    public List<ParsedInputTO> list() {
-        List<ParsedInputTO> result = new ArrayList<>();
+    @Override
+    public List<ParsedTextTO> getAllParsedTexts() {
+        List<ParsedTextTO> result = new ArrayList<>();
 
-        Iterable<ParsedInput> all = parsedInputRepo.findAll();
-        for (ParsedInput entity : all)
+        Iterable<ParsedText> all = parsedInputRepo.findAll();
+        for (ParsedText entity : all)
             result.add(inputConverter.toTo(entity));
 
         return result;
     }
 
-    public ParsedInputTO getById(int id) {
-        ParsedInput parsedInput = parsedInputRepo.findOne(id);
+    @Override
+    public ParsedTextTO getParsedTextById(int id) {
+        ParsedText parsedInput = parsedInputRepo.findOne(id);
         if (parsedInput == null)
             return null;
         return inputConverter.toTo(parsedInput);
     }
 
-    public ParsedInputTO acceptTextParsing(ParsedInputTO newEntry) {
-        ParsedInput duplicate = findDuplicate(newEntry);
+    @Override
+    public ParsedTextTO submitParsedText(ParsedTextTO newEntry) {
+        ParsedText duplicate = findDuplicate(newEntry);
         if (isDuplicateFound(duplicate)) {
             validateFullTextMatches(newEntry, duplicate);
 
@@ -52,51 +55,56 @@ public class ParsedInputService {
             increaseVotesForMatchingFields(newEntry, duplicate);
 
             // save all updates to the existing parsed input entry; cascades
-            ParsedInput persisted = persist(duplicate);
+            ParsedText persisted = persist(duplicate);
             return inputConverter.toTo(persisted);
         }
 
         // for each field, create an interpretation with 1 vote
-        ParsedInput parsedInput = inputConverter.toEntity(newEntry);
-        for (ParsedInputField field : parsedInput.getParsedFields()) {
+        ParsedText parsedInput = inputConverter.toEntity(newEntry);
+        for (TextFinding field : parsedInput.getParsedFields()) {
             field.setVotes(1);
         }
 
         // save all; cascades on fields
-        ParsedInput persisted = persist(parsedInput);
+        ParsedText persisted = persist(parsedInput);
         return inputConverter.toTo(persisted);
     }
 
-    private boolean isDuplicateFound(ParsedInput duplicate) {
+    @Override
+    public void deleteParsedTextById(int id) {
+        parsedInputRepo.delete(id);
+    }
+
+    private boolean isDuplicateFound(ParsedText duplicate) {
         return duplicate != null;
     }
 
-    private ParsedInput persist(ParsedInput duplicate) {
+    private ParsedText persist(ParsedText duplicate) {
         return parsedInputRepo.save(duplicate);
     }
 
-    private void increaseVotesForMatchingFields(ParsedInputTO newEntry, ParsedInput duplicate) {
-        for (ParsedInputFieldTO newField : newEntry.getParsedFields()) {
+    private void increaseVotesForMatchingFields(ParsedTextTO newEntry, ParsedText duplicate) {
+        for (ParsedTextFindingTO newField : newEntry.getParsedFields()) {
             boolean matched = false;
 
-            for (ParsedInputField existingField : duplicate.getParsedFields()) {
-                if (existingField.isFieldContentAndPositionMatch(newField)) {
+            for (TextFinding existingFinding : duplicate.getParsedFields()) {
+                if (existingFinding.isFieldContentAndPositionMatch(newField)) {
                     // matched; increase votes count
-                    existingField.incrVotes();
+                    existingFinding.incrVotes();
                     matched = true;
                 }
             }
 
             if (!matched) {
                 // if not matched, create another field entry on the same parsed input
-                ParsedInputField field = fieldConverter.toEntity(newField);
+                TextFinding field = fieldConverter.toEntity(newField);
                 duplicate.getParsedFields().add(field);
             }
         }
     }
 
-    private ParsedInput findDuplicate(ParsedInputTO input) {
-        List<ParsedInput> existing = parsedInputRepo.findByTextTypeAndTextSourceId(
+    private ParsedText findDuplicate(ParsedTextTO input) {
+        List<ParsedText> existing = parsedInputRepo.findByTextTypeAndTextSourceId(
                 input.getTextType(), input.getTextSourceId());
         validateMatchCount(input, existing);
 
@@ -106,7 +114,7 @@ public class ParsedInputService {
         return existing.get(0);
     }
 
-    private void validateMatchCount(ParsedInputTO input, List<ParsedInput> existing) {
+    private void validateMatchCount(ParsedTextTO input, List<ParsedText> existing) {
         if (existing.size() > 1) {
             // more than one match, this is an anomaly
             throw new IllegalStateException("More than one parse input found for " +
@@ -116,13 +124,13 @@ public class ParsedInputService {
         }
     }
 
-    private void validateFullTextMatches(ParsedInputTO parsedInputTO, ParsedInput existingParsedInput) {
+    private void validateFullTextMatches(ParsedTextTO parsedInputTO, ParsedText existingParsedInput) {
         if (!existingParsedInput.hasEqualFullText(parsedInputTO))
             throw fullTextMismatchException(parsedInputTO, existingParsedInput);
     }
 
-    private IllegalArgumentException fullTextMismatchException(ParsedInputTO newInput,
-                                                               ParsedInput existingInput) {
+    private IllegalArgumentException fullTextMismatchException(ParsedTextTO newInput,
+                                                               ParsedText existingInput) {
         return new IllegalArgumentException(
                 "The full text does not match for type=|" + newInput.getTextType() +
                         "| and sourceId=|" + newInput.getTextSourceId()
@@ -133,7 +141,7 @@ public class ParsedInputService {
                         "New input full text: " + newInput.getFullText().trim());
     }
 
-    public void deleteById(int id) {
-        parsedInputRepo.delete(id);
+    public void setParsedInputRepo(ParsedTextRepository parsedInputRepo) {
+        this.parsedInputRepo = parsedInputRepo;
     }
 }

@@ -1,14 +1,14 @@
 package ro.code4.curator.converter;
 
 import org.springframework.stereotype.Component;
-import ro.code4.curator.entity.ParsedInputField;
-import ro.code4.curator.transferObjects.ParsedInputFieldTO;
+import ro.code4.curator.entity.ReviewedTextFinding;
+import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 
 @Component
-public class ParsedInputFieldConverter {
+public class ReviewedTextFieldConverter {
 
-    public ParsedInputField toEntity(ParsedInputFieldTO to) {
-		ParsedInputField result = new ParsedInputField();
+	public ReviewedTextFinding toEntity(ParsedTextFindingTO to) {
+		ReviewedTextFinding result = new ReviewedTextFinding();
 
 		result.setFieldName(to.getFieldName());
 		result.setParsedValue(to.getParsedValue());
@@ -19,8 +19,8 @@ public class ParsedInputFieldConverter {
 		return result;
 	}
 
-	public ParsedInputFieldTO toTo(ParsedInputField entity) {
-		ParsedInputFieldTO to = new ParsedInputFieldTO();
+	public ParsedTextFindingTO toTO(ReviewedTextFinding entity) {
+		ParsedTextFindingTO to = new ParsedTextFindingTO();
 
 		to.setFieldName(entity.getFieldName());
 		to.setParsedValue(entity.getParsedValue());

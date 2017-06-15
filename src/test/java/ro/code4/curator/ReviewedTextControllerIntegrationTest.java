@@ -15,9 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ro.code4.curator.config.MockData;
-import ro.code4.curator.entity.ReviewedInput;
-import ro.code4.curator.transferObjects.ParsedInputTO;
-import ro.code4.curator.transferObjects.ShallowReviewedInputTO;
+import ro.code4.curator.entity.ReviewedText;
+import ro.code4.curator.transferObjects.ParsedTextTO;
+import ro.code4.curator.transferObjects.ShallowReviewedTextTO;
 
 import java.io.UnsupportedEncodingException;
 
@@ -42,17 +42,17 @@ public class ReviewedTextControllerIntegrationTest {
     @Test
     @WithMockUser
     public void postThenGetFinding_verifyValidDataIsPersisted() throws Exception {
-        ParsedInputTO finding1 = TestUtils.getParsedInputTO(
+        ParsedTextTO finding1 = TestUtils.getParsedInputTO(
                 "/testData/parsedInput_DNA_1100_parser1.json");
 
-        final ParsedInputTO[] persistedF1 = addFinding(finding1);
+        final ParsedTextTO[] persistedF1 = addFinding(finding1);
 
-        ReviewedInput review = TestUtils.buildReviewedInputFromFile(
+        ReviewedText review = TestUtils.buildReviewedInputFromFile(
                 "/testData/reviewedInput_DNA_1100.json");
 
-        final ParsedInputTO[] persistedR1 = doReview(persistedF1, toJson(review));
+        final ParsedTextTO[] persistedR1 = doReview(persistedF1, toJson(review));
 
-        final ShallowReviewedInputTO[] foundR1 = getReview(persistedR1);
+        final ShallowReviewedTextTO[] foundR1 = getReview(persistedR1);
 
         assertEquals(finding1.getFullText(), persistedR1[0].getFullText());
         assertEquals(review.getFullText(), persistedR1[0].getFullText());
@@ -68,21 +68,21 @@ public class ReviewedTextControllerIntegrationTest {
     @WithMockUser
     @Ignore
     public void postThenGetFinding_verifyValidDataIsPersisted_reviewMergeNotSupportedYet() throws Exception {
-        ParsedInputTO finding1 = TestUtils.getParsedInputTO(
+        ParsedTextTO finding1 = TestUtils.getParsedInputTO(
                 "/testData/parsedInput_DNA_1100_parser1.json");
-        final ParsedInputTO[] persistedF1 = addFinding(finding1);
-        ParsedInputTO finding2 = TestUtils.getParsedInputTO(
+        final ParsedTextTO[] persistedF1 = addFinding(finding1);
+        ParsedTextTO finding2 = TestUtils.getParsedInputTO(
                 "/testData/parsedInput_DNA_1100_parser2.json");
-        final ParsedInputTO[] persistedF2 = addFinding(finding2);
+        final ParsedTextTO[] persistedF2 = addFinding(finding2);
 
-        ReviewedInput review = TestUtils.buildReviewedInputFromFile(
+        ReviewedText review = TestUtils.buildReviewedInputFromFile(
                 "/testData/reviewedInput_DNA_1100.json");
 
         String content = toJson(review);
-        final ParsedInputTO[] persistedR1 = doReview(persistedF1, content);
-        final ParsedInputTO[] persistedR2 = doReview(persistedF2, content);
-        final ShallowReviewedInputTO[] foundR1 = getReview(persistedR1);
-        final ShallowReviewedInputTO[] foundR2 = getReview(persistedR2);
+        final ParsedTextTO[] persistedR1 = doReview(persistedF1, content);
+        final ParsedTextTO[] persistedR2 = doReview(persistedF2, content);
+        final ShallowReviewedTextTO[] foundR1 = getReview(persistedR1);
+        final ShallowReviewedTextTO[] foundR2 = getReview(persistedR2);
 
         assertEquals(finding1.getFullText(), persistedR1[0].getFullText());
         assertEquals(review.getFullText(), persistedR1[0].getFullText());
@@ -97,43 +97,43 @@ public class ReviewedTextControllerIntegrationTest {
         deleteReview(foundR2[0]);
     }
 
-    private ShallowReviewedInputTO[] getReview(ParsedInputTO[] persistedR1) throws Exception {
-        ShallowReviewedInputTO[] foundR1 = {null};
+    private ShallowReviewedTextTO[] getReview(ParsedTextTO[] persistedR1) throws Exception {
+        ShallowReviewedTextTO[] foundR1 = {null};
         mockMvc.perform(
                 get("/input/reviewed/" + persistedR1[0].getEntityId()))
                 .andDo(result ->
-                        foundR1[0] = parseJsonObj(getContentAsString(result), ShallowReviewedInputTO.class))
+                        foundR1[0] = parseJsonObj(getContentAsString(result), ShallowReviewedTextTO.class))
                 .andExpect(status().isOk());
         return foundR1;
     }
 
-    private void deleteReview(ShallowReviewedInputTO shallowReviewedInputTO) throws Exception {
+    private void deleteReview(ShallowReviewedTextTO shallowReviewedInputTO) throws Exception {
         mockMvc.perform(
                 delete("/input/reviewed/" + shallowReviewedInputTO.getId())
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk());
     }
 
-    private ParsedInputTO[] doReview(ParsedInputTO[] persistedF1, String content) throws Exception {
-        ParsedInputTO[] persistedReview = {null};
+    private ParsedTextTO[] doReview(ParsedTextTO[] persistedF1, String content) throws Exception {
+        ParsedTextTO[] persistedReview = {null};
         mockMvc.perform(
                 post("/input/reviewed/"+persistedF1[0].getEntityId())
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
-                .andDo(result -> persistedReview[0] = parseJsonObj(getContentAsString(result), ParsedInputTO.class))
+                .andDo(result -> persistedReview[0] = parseJsonObj(getContentAsString(result), ParsedTextTO.class))
                 .andExpect(status().isOk());
         return persistedReview;
     }
 
-    private ParsedInputTO[] addFinding(ParsedInputTO originalFinding) throws Exception {
-        final ParsedInputTO[] persistedFinding = {null};
+    private ParsedTextTO[] addFinding(ParsedTextTO originalFinding) throws Exception {
+        final ParsedTextTO[] persistedFinding = {null};
         mockMvc.perform(
                 post("/input/parsed/")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(originalFinding)))
-                .andDo(result -> persistedFinding[0] = parseJsonObj(getContentAsString(result), ParsedInputTO.class))
+                .andDo(result -> persistedFinding[0] = parseJsonObj(getContentAsString(result), ParsedTextTO.class))
                 .andExpect(status().isOk());
         return persistedFinding;
     }

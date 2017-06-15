@@ -1,32 +1,34 @@
 package ro.code4.curator.converter;
 
 import org.springframework.stereotype.Component;
-import ro.code4.curator.entity.ReviewedInputField;
-import ro.code4.curator.transferObjects.ParsedInputFieldTO;
+import ro.code4.curator.entity.TextFinding;
+import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 
 @Component
-public class ReviewedInputFieldConverter {
+public class ParsedTextFieldConverter {
 
-	public ReviewedInputField toEntity(ParsedInputFieldTO to) {
-		ReviewedInputField result = new ReviewedInputField();
+    public TextFinding toEntity(ParsedTextFindingTO to) {
+		TextFinding result = new TextFinding();
 
 		result.setFieldName(to.getFieldName());
 		result.setParsedValue(to.getParsedValue());
 		result.setStartPos(to.getStartPos());
 		result.setEndPos(to.getEndPos());
 		result.setParserId(to.getParserId());
+		result.setVotes(to.getVotes());
 
 		return result;
 	}
 
-	public ParsedInputFieldTO toTO(ReviewedInputField entity) {
-		ParsedInputFieldTO to = new ParsedInputFieldTO();
+	public ParsedTextFindingTO toTo(TextFinding entity) {
+		ParsedTextFindingTO to = new ParsedTextFindingTO();
 
 		to.setFieldName(entity.getFieldName());
 		to.setParsedValue(entity.getParsedValue());
 		to.setStartPos(entity.getStartPos());
 		to.setEndPos(entity.getEndPos());
 		to.setParserId(entity.getParserId());
+		to.setVotes(entity.getVotes());
 
 		return to;
 	}

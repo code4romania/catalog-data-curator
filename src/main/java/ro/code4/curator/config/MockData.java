@@ -6,15 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ro.code4.curator.converter.FileUtils;
-import ro.code4.curator.converter.ParsedInputConverter;
-import ro.code4.curator.converter.ReviewedInputConverter;
-import ro.code4.curator.entity.ParsedInput;
-import ro.code4.curator.entity.ReviewedInput;
-import ro.code4.curator.entity.User;
+import ro.code4.curator.converter.ParsedTextConverter;
+import ro.code4.curator.converter.ReviewedTextConverter;
+import ro.code4.curator.entity.*;
 import ro.code4.curator.repository.UserRepository;
-import ro.code4.curator.service.ParsedInputService;
-import ro.code4.curator.service.ReviewedInputService;
-import ro.code4.curator.transferObjects.ParsedInputTO;
+import ro.code4.curator.transferObjects.ParsedTextTO;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -32,19 +28,19 @@ public class MockData {
     private static final Logger log = LoggerFactory.getLogger(MockData.class);
 
     @Autowired
-    ParsedInputService parsedInputService;
+    ParsedTextManager parsedInputService;
 
     @Autowired
-    ReviewedInputService reviewedInputService;
+    ReviewedTextManager IReviewedInputService;
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    ReviewedInputConverter reviewedInputConverter;
+    ReviewedTextConverter reviewedInputConverter;
 
     @Autowired
-    ParsedInputConverter parsedInputConverter;
+    ParsedTextConverter parsedInputConverter;
 
     @Value("${test.data.enabled:false}")
     private boolean isEnabled = false;
@@ -53,8 +49,8 @@ public class MockData {
     private String testDataFolder;
 
     public User testUser = new User("user", "password");
-    public List<ParsedInput> mockParsedInputs = new ArrayList<>();
-    public List<ReviewedInput> mockReviewedInputs = new ArrayList<>();
+    public List<ParsedText> mockParsedInputs = new ArrayList<>();
+    public List<ReviewedText> mockReviewedInputs = new ArrayList<>();
 
     @PostConstruct
     public void initDummyData() {
@@ -75,26 +71,26 @@ public class MockData {
             return;
 
         // get initial parsing
-        ParsedInput parsedInput = mockParsedInputs.get(0);
+        ParsedText parsedInput = mockParsedInputs.get(0);
 
         // make review
-        ReviewedInput reviewedInput = toEntity(toTo(parsedInput));
+        ReviewedText reviewedInput = toEntity(toTo(parsedInput));
         add(reviewedInput, parsedInput);
 
         // set initial parsing to reviewed
         parsedInput.setReviewed(true);
-        parsedInputService.acceptTextParsing(toTo(parsedInput));
+        parsedInputService.submitParsedText(toTo(parsedInput));
     }
 
     private void addParsedInput() {
-        ParsedInput entity = null;
+        ParsedText entity = null;
         String path = getTestDataFolder();
         Collection<File> files = org.apache.commons.io.FileUtils.listFiles(new File(path),
                 new String[]{"json"}, false);
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()) {
             String filePath = iterator.next().getAbsolutePath();
-            entity = ParsedInput.from(FileUtils.readFile(filePath));
+            entity = ParsedText.from(FileUtils.readFile(filePath));
             add(entity);
         }
     }
@@ -108,28 +104,28 @@ public class MockData {
         return MockData.class.getResource(testDataFolder).getFile();
     }
 
-    private void add(ReviewedInput entity, ParsedInput input) {
-        ParsedInputTO to = reviewedInputService.submitReviewedInput(
+    private void add(ReviewedText entity, ParsedText input) {
+        ParsedTextTO to = IReviewedInputService.submitReview(
                 input.getId(),
                 toTo(entity));
         mockReviewedInputs.add(toEntity(to));
     }
 
-    private ParsedInputTO toTo(ReviewedInput entity1) {
+    private ParsedTextTO toTo(ReviewedText entity1) {
         return reviewedInputConverter.toTO(entity1);
     }
 
-    private void add(ParsedInput entity) {
-        ParsedInputTO to = parsedInputService.acceptTextParsing(
+    private void add(ParsedText entity) {
+        ParsedTextTO to = parsedInputService.submitParsedText(
                 toTo(entity));
         mockParsedInputs.add(parsedInputConverter.toEntity(to));
     }
 
-    private ReviewedInput toEntity(ParsedInputTO to) {
+    private ReviewedText toEntity(ParsedTextTO to) {
         return reviewedInputConverter.toEntity(to);
     }
 
-    private ParsedInputTO toTo(ParsedInput parsedInput) {
+    private ParsedTextTO toTo(ParsedText parsedInput) {
         return parsedInputConverter.toTo(parsedInput);
     }
 

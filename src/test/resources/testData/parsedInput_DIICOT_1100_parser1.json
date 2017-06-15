@@ -6,21 +6,25 @@
       "endPos": 39,
       "fieldName": "Nume",
       "parsedValue": "Radu Jakab",
-      "parserId": "radu's scrapper"
+      "parserId": "radu's scrapper",
+      "votes": 1
+
     },
     {
       "startPos": 46,
       "endPos": 56,
       "fieldName": "Data",
       "parsedValue": "19.04.2017",
-      "parserId": "radu's scrapper"
+      "parserId": "radu's scrapper",
+      "votes": 1
     },
     {
       "startPos": 61,
       "endPos": 68,
       "fieldName": "Suma",
       "parsedValue": "doi lei",
-      "parserId": "radu's scrapper"
+      "parserId": "radu's scrapper",
+      "votes": 1
     }
   ],
   "textSourceId": "1100",

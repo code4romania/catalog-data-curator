@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import ro.code4.curator.config.MockData;
 import ro.code4.curator.converter.FileUtils;
 import ro.code4.curator.converter.JsonUtils;
-import ro.code4.curator.transferObjects.ParsedInputTO;
+import ro.code4.curator.transferObjects.ParsedTextTO;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +44,7 @@ public class ParsedTextControllerIntegrationTest {
         mockMvc.perform(
                 get("/input/parsed"))
                 .andDo(result -> {
-                    ParsedInputTO[] results = parseJsonArray(getContentAsString(result));
+                    ParsedTextTO[] results = parseJsonArray(getContentAsString(result));
                     // depends on the mock data size
 //                    assertEquals("all test data should be retrieved",
 //                            testData.mockParsedInputs.size(), results.length);
@@ -63,7 +63,7 @@ public class ParsedTextControllerIntegrationTest {
         mockMvc.perform(
                 get("/input/parsed/" + id))
                 .andDo(result -> {
-                    ParsedInputTO to = parseJsonObj(getContentAsString(result));
+                    ParsedTextTO to = parseJsonObj(getContentAsString(result));
                     assertEquals("review should be found",
                             id, to.getEntityId());
                 })
@@ -86,9 +86,10 @@ public class ParsedTextControllerIntegrationTest {
     @Test
     @WithMockUser
     public void postThenGetFinding_verifyValidDataIsPersisted() throws Exception {
-        ParsedInputTO originalFinding = JsonUtils.parseJsonObj(FileUtils.readFile("/testData/parsedInput_DIICOT_1100_parser1.json"), ParsedInputTO.class);
-        final ParsedInputTO[] persistedFinding = {null};
-        final ParsedInputTO[] foundFinding = {null};
+        String json = FileUtils.readFile("/testData/parsedInput_DIICOT_1100_parser1.json");
+        ParsedTextTO originalFinding = JsonUtils.parseJsonObj(json, ParsedTextTO.class);
+        final ParsedTextTO[] persistedFinding = {null};
+        final ParsedTextTO[] foundFinding = {null};
 
         // add new finding
         mockMvc.perform(
@@ -138,7 +139,7 @@ public class ParsedTextControllerIntegrationTest {
         return new File(path);
     }
 
-    private String toJson(ParsedInputTO finding) throws JsonProcessingException {
+    private String toJson(ParsedTextTO finding) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(finding);
     }
 
@@ -146,11 +147,11 @@ public class ParsedTextControllerIntegrationTest {
         return json == null || "".equals(json.trim());
     }
 
-    private ParsedInputTO parseJsonObj(String json) throws java.io.IOException {
-        return new ObjectMapper().readValue(json, ParsedInputTO.class);
+    private ParsedTextTO parseJsonObj(String json) throws java.io.IOException {
+        return new ObjectMapper().readValue(json, ParsedTextTO.class);
     }
 
-    private ParsedInputTO[] parseJsonArray(String json) throws java.io.IOException {
-        return new ObjectMapper().readValue(json, ParsedInputTO[].class);
+    private ParsedTextTO[] parseJsonArray(String json) throws java.io.IOException {
+        return new ObjectMapper().readValue(json, ParsedTextTO[].class);
     }
 }

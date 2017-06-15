@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class ReviewedInput {
+public class ReviewedText {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -20,5 +20,5 @@ public class ReviewedInput {
 	private String textSourceId;
 
 	@OneToMany(mappedBy = "reviewedInputId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ReviewedInputField> reviewedFields = new ArrayList<>();
+	private List<ReviewedTextFinding> reviewedFields = new ArrayList<>();
 }

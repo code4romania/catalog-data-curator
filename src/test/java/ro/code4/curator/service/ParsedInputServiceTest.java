@@ -4,12 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.code4.curator.Application;
-import ro.code4.curator.transferObjects.ParsedInputFieldTO;
-import ro.code4.curator.transferObjects.ParsedInputTO;
+import ro.code4.curator.entity.ParsedTextManager;
+import ro.code4.curator.transferObjects.ParsedTextFindingTO;
+import ro.code4.curator.transferObjects.ParsedTextTO;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -25,55 +25,55 @@ public class ParsedInputServiceTest {
     // TODO add parsed input merging tests
 
     @Autowired
-    ParsedInputService service;
+    ParsedTextManager service;
 
     @Before
     public void setUp() throws Exception {
-        service.list().stream()
-                .forEach(e -> service.deleteById(e.getEntityId()));
+        service.getAllParsedTexts().stream()
+                .forEach(e -> service.deleteParsedTextById(e.getEntityId()));
     }
 
     @Test
     public void shouldReturnEmptyList_ifDbEmpty() throws Exception {
-        assertTrue(service.list().isEmpty());
+        assertTrue(service.getAllParsedTexts().isEmpty());
     }
 
     @Test
     public void shouldAddThenFindNewEntry_getAll_vs_getById() throws Exception {
         // is empty
-        assertTrue(service.list().isEmpty());
+        assertTrue(service.getAllParsedTexts().isEmpty());
 
         // add one
-        service.acceptTextParsing(new ParsedInputTO());
+        service.submitParsedText(new ParsedTextTO());
 
         // list all
-        ParsedInputTO entry = service.list().get(0);
+        ParsedTextTO entry = service.getAllParsedTexts().get(0);
 
         // get by id should return the same
-        assertEquals(entry, service.getById(entry.getEntityId()));
+        assertEquals(entry, service.getParsedTextById(entry.getEntityId()));
     }
 
     @Test
     public void shouldAddThenFindNewEntry_validateAllFields() throws Exception {
         // is empty
-        assertTrue(service.list().isEmpty());
+        assertTrue(service.getAllParsedTexts().isEmpty());
         // add one
         String fullText = "Sus numitului Aurel Inculpat, i se aduc urmatoarele acuzatii...";
         String parsedText = "Aurel Inculpat";
-        ParsedInputFieldTO fieldTO = new ParsedInputFieldTO();
+        ParsedTextFindingTO fieldTO = new ParsedTextFindingTO();
         fieldTO.setFieldName("inculpat");
         fieldTO.setParsedValue(parsedText);
         fieldTO.setParserId("parser-inculpat");
         fieldTO.setStartPos(fullText.indexOf(parsedText));
         fieldTO.setEndPos(fullText.indexOf(parsedText) + parsedText.length());
-        ParsedInputTO entry = new ParsedInputTO();
+        ParsedTextTO entry = new ParsedTextTO();
         entry.setTextType("Dosar");
         entry.setTextSourceId("DNA");
         entry.setReviewed(true);
         entry.setFullText(fullText);
         entry.setParsedFields(asList(fieldTO));
 
-        ParsedInputTO savedEntry = service.acceptTextParsing(entry);
+        ParsedTextTO savedEntry = service.submitParsedText(entry);
 
         // compare original to returned obj on save operation
         assertEquals(fullText, savedEntry.getFullText());
@@ -81,7 +81,7 @@ public class ParsedInputServiceTest {
         assertEquals("Dosar", savedEntry.getTextType());
         assertTrue(savedEntry.isReviewed());
         assertEquals(1, savedEntry.getParsedFields().size());
-        ParsedInputFieldTO to = savedEntry.getParsedFields().get(0);
+        ParsedTextFindingTO to = savedEntry.getParsedFields().get(0);
         assertEquals(fieldTO.getEndPos(), to.getEndPos());
         assertEquals(fieldTO.getStartPos(), to.getStartPos());
         assertEquals(fieldTO.getFieldName(), to.getFieldName());
@@ -90,7 +90,7 @@ public class ParsedInputServiceTest {
         assertEquals(fieldTO.getParsedInputId(), to.getParsedInputId());
 
         // list all
-        ParsedInputTO se = service.list().get(0);
+        ParsedTextTO se = service.getAllParsedTexts().get(0);
 
         // compare retrieve result with save obj
         assertEquals(savedEntry.getFullText(), se.getFullText());
@@ -98,7 +98,7 @@ public class ParsedInputServiceTest {
         assertEquals(savedEntry.getTextType(), se.getTextType());
         assertTrue(se.isReviewed());
         assertEquals(savedEntry.getParsedFields().size(), se.getParsedFields().size());
-        ParsedInputFieldTO seto = savedEntry.getParsedFields().get(0);
+        ParsedTextFindingTO seto = savedEntry.getParsedFields().get(0);
         assertEquals(to.getEndPos(), seto.getEndPos());
         assertEquals(to.getStartPos(), seto.getStartPos());
         assertEquals(to.getFieldName(), seto.getFieldName());

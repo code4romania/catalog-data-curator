@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class ReviewedInputField {
+public class ReviewedTextFinding {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@ManyToOne
-	private ReviewedInput reviewedInputId;
+	private ReviewedText reviewedInputId;
 
 	@OneToOne
-	private ReviewedInputField parentField;
+	private ReviewedTextFinding parentField;
 
 	private String fieldName;
 	private int startPos;

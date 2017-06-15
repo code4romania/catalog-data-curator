@@ -1,8 +1,8 @@
 package ro.code4.curator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ro.code4.curator.entity.ReviewedInput;
-import ro.code4.curator.transferObjects.ParsedInputTO;
+import ro.code4.curator.entity.ReviewedText;
+import ro.code4.curator.transferObjects.ParsedTextTO;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,14 +14,14 @@ public class TestUtils {
 
     private TestUtils() {}
 
-    public static ParsedInputTO getParsedInputTO(String name) throws IOException {
+    public static ParsedTextTO getParsedInputTO(String name) throws IOException {
         File file = TestUtils.getFile(name);
-        return new ObjectMapper().readValue(file, ParsedInputTO.class);
+        return new ObjectMapper().readValue(file, ParsedTextTO.class);
     }
 
-    public static ReviewedInput buildReviewedInputFromFile(String name) throws IOException {
+    public static ReviewedText buildReviewedInputFromFile(String name) throws IOException {
         File file = getFile(name);
-        return new ObjectMapper().readValue(file, ReviewedInput.class);
+        return new ObjectMapper().readValue(file, ReviewedText.class);
     }
 
     public static File getFile(String name) {
@@ -33,8 +33,8 @@ public class TestUtils {
         return new ObjectMapper().readValue(json, clazz);
     }
 
-    public static ParsedInputTO[] parseJsonArray(String json) throws IOException {
-        return new ObjectMapper().readValue(json, ParsedInputTO[].class);
+    public static ParsedTextTO[] parseJsonArray(String json) throws IOException {
+        return new ObjectMapper().readValue(json, ParsedTextTO[].class);
     }
 
 

@@ -12,13 +12,13 @@ public class ParsedInputFieldTest {
 
     @Test
     public void verifyNoCircularReferenceProblems() throws Exception {
-        ParsedInput input = new ParsedInput();
+        ParsedText input = new ParsedText();
 
-        ParsedInputField parentField = new ParsedInputField();
+        TextFinding parentField = new TextFinding();
         input.getParsedFields().add(parentField);
         parentField.setParsedInputId(input);
 
-        ParsedInputField field = new ParsedInputField();
+        TextFinding field = new TextFinding();
         field.setParsedInputId(input);
         field.setParentField(parentField);
 
@@ -29,8 +29,8 @@ public class ParsedInputFieldTest {
 
     @Test
     public void verifyNoCircularReferenceProblems_fieldParent() throws Exception {
-        ParsedInputField parent = new ParsedInputField();
-        ParsedInputField child = new ParsedInputField();
+        TextFinding parent = new TextFinding();
+        TextFinding child = new TextFinding();
 
         child.setParentField(parent);
         parent.setParentField(child);

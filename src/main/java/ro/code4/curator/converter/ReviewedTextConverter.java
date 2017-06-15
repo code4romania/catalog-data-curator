@@ -1,24 +1,23 @@
 package ro.code4.curator.converter;
 
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import ro.code4.curator.entity.ReviewedText;
+import ro.code4.curator.entity.ReviewedTextFinding;
+import ro.code4.curator.transferObjects.ParsedTextFindingTO;
+import ro.code4.curator.transferObjects.ParsedTextTO;
+import ro.code4.curator.transferObjects.ShallowReviewedTextTO;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
-import org.springframework.stereotype.Component;
-import ro.code4.curator.entity.ReviewedInput;
-import ro.code4.curator.transferObjects.ParsedInputTO;
-import ro.code4.curator.transferObjects.ShallowReviewedInputTO;
-import ro.code4.curator.entity.ReviewedInputField;
-import ro.code4.curator.transferObjects.ParsedInputFieldTO;
-
 @Component
-public class ReviewedInputConverter {
+public class ReviewedTextConverter {
 
-	private static Logger LOGGER = Logger.getLogger(ReviewedInputConverter.class);
+	private static Logger LOGGER = Logger.getLogger(ReviewedTextConverter.class);
 
-	public ReviewedInput toEntity(ParsedInputTO to) {
-		ReviewedInput result = new ReviewedInput();
+	public ReviewedText toEntity(ParsedTextTO to) {
+		ReviewedText result = new ReviewedText();
 
 		// set own properties
 		result.setId(to.getEntityId());
@@ -27,21 +26,21 @@ public class ReviewedInputConverter {
 		result.setFullText(to.getFullText());
 
 		// iterate parsed input fields
-		Map<ParsedInputFieldTO, ReviewedInputField> fieldsMapping = new HashMap<>();
-		ReviewedInputFieldConverter fieldConverter = new ReviewedInputFieldConverter();
-		for (ParsedInputFieldTO fieldTO : to.getParsedFields()) {
-			ReviewedInputField convertedField = fieldConverter.toEntity(fieldTO);
+		Map<ParsedTextFindingTO, ReviewedTextFinding> fieldsMapping = new HashMap<>();
+		ReviewedTextFieldConverter fieldConverter = new ReviewedTextFieldConverter();
+		for (ParsedTextFindingTO fieldTO : to.getParsedFields()) {
+			ReviewedTextFinding convertedField = fieldConverter.toEntity(fieldTO);
 			convertedField.setReviewedInputId(result);
 			result.getReviewedFields().add(convertedField);
 			fieldsMapping.put(fieldTO, convertedField);
 		}
 
 		// check if fields have parent fields that need to be matched
-		for (ParsedInputFieldTO fieldTO : to.getParsedFields()) {
+		for (ParsedTextFindingTO fieldTO : to.getParsedFields()) {
 			if (fieldTO.getParentFieldName() != null && !fieldTO.getParentFieldName().isEmpty()) {
 				// find the parent field
 				boolean found = false;
-				for (ReviewedInputField parentCandidate : result.getReviewedFields())
+				for (ReviewedTextFinding parentCandidate : result.getReviewedFields())
 					if (fieldTO.getParentFieldName().equals(parentCandidate.getFieldName())) {
 						fieldsMapping.get(fieldTO).setParentField(parentCandidate);
 						found = true;
@@ -57,8 +56,8 @@ public class ReviewedInputConverter {
 		return result;
 	}
 
-	public ParsedInputTO toTO(ReviewedInput entity) {
-		ParsedInputTO result = new ParsedInputTO();
+	public ParsedTextTO toTO(ReviewedText entity) {
+		ParsedTextTO result = new ParsedTextTO();
 
 		// set own properties
 		result.setEntityId(entity.getId());
@@ -67,17 +66,17 @@ public class ReviewedInputConverter {
 		result.setTextType(entity.getTextType());
 
 		// set parsed input fields
-		ReviewedInputFieldConverter fieldConverter = new ReviewedInputFieldConverter();
-		for (ReviewedInputField field : entity.getReviewedFields()) {
-			ParsedInputFieldTO fieldTO = fieldConverter.toTO(field);
+		ReviewedTextFieldConverter fieldConverter = new ReviewedTextFieldConverter();
+		for (ReviewedTextFinding field : entity.getReviewedFields()) {
+			ParsedTextFindingTO fieldTO = fieldConverter.toTO(field);
 			result.getParsedFields().add(fieldTO);
 		}
 
 		return result;
 	}
 
-	public ShallowReviewedInputTO toShallowTO(ReviewedInput entity) {
-		ShallowReviewedInputTO result = new ShallowReviewedInputTO();
+	public ShallowReviewedTextTO toShallowTO(ReviewedText entity) {
+		ShallowReviewedTextTO result = new ShallowReviewedTextTO();
 
 		result.setId(entity.getId());
 		result.setTextSourceId(entity.getTextSourceId());

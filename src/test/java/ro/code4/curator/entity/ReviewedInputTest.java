@@ -12,13 +12,13 @@ public class ReviewedInputTest {
 
     @Test
     public void verifyNoCircularReferenceProblems() throws Exception {
-        ReviewedInput input = new ReviewedInput();
+        ReviewedText input = new ReviewedText();
 
-        ReviewedInputField parentField = new ReviewedInputField();
+        ReviewedTextFinding parentField = new ReviewedTextFinding();
         input.getReviewedFields().add(parentField);
         parentField.setReviewedInputId(input);
 
-        ReviewedInputField field = new ReviewedInputField();
+        ReviewedTextFinding field = new ReviewedTextFinding();
         field.setReviewedInputId(input);
         field.setParentField(parentField);
 
@@ -29,8 +29,8 @@ public class ReviewedInputTest {
 
     @Test
     public void verifyNoCircularReferenceProblems_fieldParent() throws Exception {
-        ReviewedInputField parent = new ReviewedInputField();
-        ReviewedInputField child = new ReviewedInputField();
+        ReviewedTextFinding parent = new ReviewedTextFinding();
+        ReviewedTextFinding child = new ReviewedTextFinding();
 
         child.setParentField(parent);
         parent.setParentField(child);
