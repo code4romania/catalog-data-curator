@@ -1,7 +1,7 @@
 package ro.code4.curator.service;
 
 import ro.code4.curator.entity.ReviewedText;
-import ro.code4.curator.repository.ReviewedInputRepository;
+import ro.code4.curator.repository.ReviewedTextRepository;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Date: 6/14/17
  * Time: 11:57 PM
  */
-class InMemoryReviewedInputRepository implements ReviewedInputRepository {
+class InMemoryReviewedInputRepository implements ReviewedTextRepository {
     
     @Override
     public ReviewedText findByTextTypeAndTextSourceId(String textType, String textSourceId) {

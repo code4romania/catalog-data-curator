@@ -7,7 +7,7 @@ import ro.code4.curator.entity.ParsedText;
 import ro.code4.curator.entity.ReviewedText;
 import ro.code4.curator.entity.ReviewedTextManager;
 import ro.code4.curator.repository.ParsedTextRepository;
-import ro.code4.curator.repository.ReviewedInputRepository;
+import ro.code4.curator.repository.ReviewedTextRepository;
 import ro.code4.curator.transferObjects.ParsedTextTO;
 import ro.code4.curator.transferObjects.ShallowReviewedTextTO;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class ReviewTextService implements ReviewedTextManager {
 
     @Autowired
-    private ReviewedInputRepository reviewedInputRepo;
+    private ReviewedTextRepository reviewedInputRepo;
 
     @Autowired
     private ParsedTextRepository parsedInputRepository;
@@ -92,7 +92,7 @@ public class ReviewTextService implements ReviewedTextManager {
         reviewedInputRepo.delete(Integer.valueOf(id));
     }
 
-    public void setReviewedInputRepo(ReviewedInputRepository reviewedInputRepo) {
+    public void setReviewedInputRepo(ReviewedTextRepository reviewedInputRepo) {
         this.reviewedInputRepo = reviewedInputRepo;
     }
 

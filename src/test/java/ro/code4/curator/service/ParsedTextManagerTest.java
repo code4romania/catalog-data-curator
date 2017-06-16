@@ -20,9 +20,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @org.springframework.transaction.annotation.Transactional(noRollbackFor = {})
-public class ParsedInputServiceTest {
-
-    // TODO add parsed input merging tests
+public class ParsedTextManagerTest {
 
     @Autowired
     ParsedTextManager service;
@@ -34,12 +32,12 @@ public class ParsedInputServiceTest {
     }
 
     @Test
-    public void shouldReturnEmptyList_ifDbEmpty() throws Exception {
+    public void should_ReturnEmptyList_ifDbEmpty() throws Exception {
         assertTrue(service.getAllParsedTexts().isEmpty());
     }
 
     @Test
-    public void shouldAddThenFindNewEntry_getAll_vs_getById() throws Exception {
+    public void should_AddThenFindNewEntry_getAll_vs_getById() throws Exception {
         // is empty
         assertTrue(service.getAllParsedTexts().isEmpty());
 
@@ -54,7 +52,7 @@ public class ParsedInputServiceTest {
     }
 
     @Test
-    public void shouldAddThenFindNewEntry_validateAllFields() throws Exception {
+    public void should_AddThenFindNewEntry_validateAllFields() throws Exception {
         // is empty
         assertTrue(service.getAllParsedTexts().isEmpty());
         // add one

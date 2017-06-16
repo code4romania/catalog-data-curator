@@ -7,6 +7,6 @@ import ro.code4.curator.entity.ReviewedText;
 import java.io.Serializable;
 
 @Repository
-public interface ReviewedInputRepository extends CrudRepository<ReviewedText, Serializable> {
+public interface ReviewedTextRepository extends CrudRepository<ReviewedText, Serializable> {
     ReviewedText findByTextTypeAndTextSourceId(String textType, String textSourceId);
 }

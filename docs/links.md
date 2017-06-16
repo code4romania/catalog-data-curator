@@ -1,3 +1,9 @@
+# Confluence
+https://codeforromania.atlassian.net/wiki/pages/viewpage.action?spaceKey=CP&title=03.+Arhitectura
+
+# Jira
+https://codeforromania.atlassian.net/projects/CP/issues
+
 # Parsing notes
 https://docs.google.com/document/d/17oiZP9PMY6QgR57l0NV3cX_kESp41f19ka1be9LnnP4/edit#heading=h.hi38o1dy1j0u
 

@@ -9,7 +9,7 @@ import org.junit.Test;
 import ro.code4.curator.entity.ParsedText;
 import ro.code4.curator.entity.ReviewedText;
 import ro.code4.curator.repository.ParsedTextRepository;
-import ro.code4.curator.repository.ReviewedInputRepository;
+import ro.code4.curator.repository.ReviewedTextRepository;
 import ro.code4.curator.transferObjects.ParsedTextTO;
 
 /**
@@ -17,20 +17,20 @@ import ro.code4.curator.transferObjects.ParsedTextTO;
  * Date: 6/14/17
  * Time: 8:24 PM
  */
-public class ReviewedInputServiceTest {
+public class ReviewedTextServiceTest {
 
     @Rule
     public JUnitRuleMockery context = new JUnitRuleMockery();
 
     private ReviewTextService service;
-    private ReviewedInputRepository reviewedInputRepo;
+    private ReviewedTextRepository reviewedInputRepo;
     private ParsedTextRepository parsedInputRepository;
 
 
     @Before
     public void setUp() throws Exception {
         service = new ReviewTextService();
-        reviewedInputRepo = context.mock(ReviewedInputRepository.class);
+        reviewedInputRepo = context.mock(ReviewedTextRepository.class);
         service.setReviewedInputRepo(reviewedInputRepo);
         parsedInputRepository = context.mock(ParsedTextRepository.class);
         service.setParsedInputRepository(parsedInputRepository);

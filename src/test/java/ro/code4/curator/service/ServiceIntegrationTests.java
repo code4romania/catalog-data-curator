@@ -1,17 +1,16 @@
 package ro.code4.curator.service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import ro.code4.curator.repository.ReviewedInputRepository;
+import ro.code4.curator.repository.ReviewedTextRepository;
 import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 import ro.code4.curator.transferObjects.ParsedTextTO;
 
 import java.util.List;
 
 import static java.lang.Math.round;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static ro.code4.curator.transferObjects.ParsedTextFindingTO.with;
 import static ro.code4.curator.transferObjects.ParsedTextTO.withFullText;
 
@@ -24,7 +23,7 @@ public class ServiceIntegrationTests {
     private ParsedTextService parsedTextService;
     private ReviewTextService reviewTextService;
     private InMemoryParsedTextRepository parsedInputRepo;
-    private ReviewedInputRepository reviewedInputRepo;
+    private ReviewedTextRepository reviewedInputRepo;
 
     @Before
     public void setUp() throws Exception {
@@ -40,6 +39,7 @@ public class ServiceIntegrationTests {
     }
 
     @Test
+    @Ignore
     public void submitParsedText_submitReview_verifyMergeLogic() throws Exception {
         fail("TODO");
     }

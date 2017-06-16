@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import ro.code4.curator.entity.ReviewedTextFinding;
 
 @Repository
-public interface ReviewedInputFieldsRepository extends CrudRepository<ReviewedTextFinding, Serializable> {
+public interface ReviewedFindingRepository extends CrudRepository<ReviewedTextFinding, Serializable> {
 
 }

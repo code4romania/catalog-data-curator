@@ -22,7 +22,7 @@ class InMemoryParsedTextRepository implements ParsedTextRepository {
     @Override
     public List<ParsedText> findByTextTypeAndTextSourceId(String textType, String textSourceId) {
         List found = texts.stream()
-                .filter(text -> text.matchesBy(textSourceId, textType))
+                .filter(text -> text.isSameText(textSourceId, textType))
                 .collect(Collectors.toList());
 
         return found;

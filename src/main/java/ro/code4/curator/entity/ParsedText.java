@@ -11,6 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity represents a complete text document, including the list of findings, if any.
+ * Text is identified by source and type.
+ * New findings can be added later as they are found by different parsers.
+ *
+ * The text can be reviewed by a curator and have it's findings validated.
+ * In this process the correct findings get votes increases.
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -36,7 +44,14 @@ public class ParsedText {
         }
     }
 
-    public boolean matchesBy(String textSourceId, String textType) {
+    /**
+     * If true, both texts refer to the same document.
+     *
+     * @param textSourceId
+     * @param textType
+     * @return
+     */
+    public boolean isSameText(String textSourceId, String textType) {
         return ObjectUtils.equals(textSourceId, this.textSourceId)
                 && ObjectUtils.equals(textType, this.textType);
     }
@@ -45,7 +60,7 @@ public class ParsedText {
         return getFullText().trim().equals(parsedInputTO.getFullText().trim());
     }
 
-    public static ParsedText with(int id) {
+    public static ParsedText withId(int id) {
         ParsedText text = new ParsedText();
         text.setId(id);
         return text;
