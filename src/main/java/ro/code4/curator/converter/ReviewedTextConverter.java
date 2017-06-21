@@ -21,7 +21,8 @@ public class ReviewedTextConverter {
 
 		// set own properties
 		result.setId(to.getEntityId());
-        result.setText(to.getText());
+        result.setTextType(to.getTextType());
+        result.setTextSourceId(to.getTextSourceId());
 
 		// iterate parsed input fields
 		Map<ParsedTextFindingTO, ReviewedFinding> fieldsMapping = new HashMap<>();
@@ -59,7 +60,8 @@ public class ReviewedTextConverter {
 
 		// set own properties
 		result.setEntityId(entity.getId());
-		result.setText(entity.getText());
+		result.setTextType(entity.getTextType());
+		result.setTextSourceId(entity.getTextSourceId());
 
 		// set parsed input fields
 		ReviewedTextFieldConverter fieldConverter = new ReviewedTextFieldConverter();
@@ -75,8 +77,8 @@ public class ReviewedTextConverter {
 		ShallowReviewedTextTO result = new ShallowReviewedTextTO();
 
 		result.setId(entity.getId());
-		result.setTextSourceId(entity.getText().getTextSourceId());
-		result.setTextType(entity.getText().getTextType());
+		result.setTextSourceId(entity.getTextSourceId());
+		result.setTextType(entity.getTextType());
 
 		return result;
 	}

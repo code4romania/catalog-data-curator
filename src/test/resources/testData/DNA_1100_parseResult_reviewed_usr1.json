@@ -1,9 +1,6 @@
 {
-  "text": {
-    "fullText": "Text comunicat DNA, facut de Radu Jakab, data 19.04.2017, de doi lei",
-    "textSourceId": "1100",
-    "textType": "DNA"
-  },
+  "textSourceId": "1100",
+  "textType": "DNA",
   "reviewedFields": [
     {
       "startPos": 29,
@@ -23,7 +20,5 @@
       "fieldName": "Suma",
       "parsedValue": "doi lei"
     }
-  ],
-  "textSourceId": "1100",
-  "textType": "DNA"
+  ]
 }

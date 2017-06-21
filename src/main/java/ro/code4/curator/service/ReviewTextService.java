@@ -32,8 +32,8 @@ public class ReviewTextService implements ReviewedTextManager {
     @Override
     public ParsedTextTO submitReview(int parsedInputId, ParsedTextTO reviewedInputTO) {
         // check if there is already a reviewed input entry for this textType + id
-        String textType = reviewedInputTO.getText().getTextType();
-        String sourceId = reviewedInputTO.getText().getTextSourceId();
+        String textType = reviewedInputTO.getTextType();
+        String sourceId = reviewedInputTO.getTextSourceId();
         ReviewedText existingEntity = reviewedInputRepo.findByTextTypeAndTextSourceId(textType, sourceId);
 
         if (existingEntity != null) {

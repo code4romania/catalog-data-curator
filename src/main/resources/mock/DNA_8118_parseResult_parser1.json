@@ -1,0 +1,28 @@
+{
+  "parsedFields": [
+    {
+      "startPos": 407,
+      "endPos": 426,
+      "fieldName": "name",
+      "parsedValue": "STĂNESCU ION ADRIAN",
+      "parserId": "name scrapper"
+    },
+    {
+      "startPos": 617,
+      "endPos": 433,
+      "fieldName": "name",
+      "parsedValue": "SĂVULESCU ANDREI",
+      "parserId": "name scrapper"
+    },
+    {
+      "startPos": 4402,
+      "endPos": 4791,
+      "fieldName": "acuzation",
+      "parsedValue": "Concret, la elaborarea, avizarea și aprobarea documentației de atribuire a contractului finanțat din bani publici, inculpații Stănescu Ion Adrian, Săvulescu Andrei și numitul Sandu Gabriel au încălcat dispoziții din OUG nr.34/2006 (actual din Legea nr.98/2016 privind achizițiile publice), precum și dispoziții din OG nr.119/1999, privind controlul intern și controlul financiar preventiv.",
+      "parserId": "acuzation scrapper"
+    }
+  ],
+  "textSourceId": "8118",
+  "textType": "DNA"
+}
+

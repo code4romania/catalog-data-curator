@@ -49,8 +49,6 @@ public class ParsedTextService implements ParsedTextManager {
     public ParsedTextTO submitParsedText(ParsedTextTO newEntry) {
         ParsedText duplicate = findDuplicate(newEntry);
         if (isDuplicateFound(duplicate)) {
-            validateFullTextMatches(newEntry, duplicate);
-
             // for each field, look for matching interpretations
             increaseVotesForMatchingFields(newEntry, duplicate);
 
@@ -104,10 +102,10 @@ public class ParsedTextService implements ParsedTextManager {
     }
 
     private ParsedText findDuplicate(ParsedTextTO input) {
-        if (input.getText() == null) return null;
+        if (input == null) return null;
 
         List<ParsedText> existing = parsedInputRepo.findByTextTypeAndTextSourceId(
-                input.getText().getTextType(), input.getText().getTextSourceId());
+                input.getTextType(), input.getTextSourceId());
         validateMatchCount(input, existing);
 
         if (existing == null || existing.isEmpty())
@@ -120,28 +118,12 @@ public class ParsedTextService implements ParsedTextManager {
         if (existing.size() > 1) {
             // more than one match, this is an anomaly
             throw new IllegalStateException("More than one parse input found for " +
-                    "type=|" + input.getText().getTextType()
-                    + "| and sourceId=|" + input.getText().getTextSourceId()
+                    "type=|" + input.getTextType()
+                    + "| and sourceId=|" + input.getTextSourceId()
                     + "|. This is an anomaly, that needs to be corrected before submitting new parse results");
         }
     }
-
-    private void validateFullTextMatches(ParsedTextTO parsedInputTO, ParsedText existingParsedInput) {
-        if (!existingParsedInput.hasEqualFullText(parsedInputTO))
-            throw fullTextMismatchException(parsedInputTO, existingParsedInput);
-    }
-
-    private IllegalArgumentException fullTextMismatchException(ParsedTextTO newInput,
-                                                               ParsedText existingInput) {
-        return new IllegalArgumentException(
-                "The full text does not match for type=|" + newInput.getText().getTextType() +
-                        "| and sourceId=|" + newInput.getText().getTextSourceId()
-                        + "|. The new input cannot be accepted because start " +
-                        "and end indices will not match.\n" +
-                        "Existing full text: "
-                        + existingInput.getText().getFullText().trim() + "\n" +
-                        "New input full text: " + newInput.getText().getFullText().trim());
-    }
+    
 
     public void setParsedInputRepo(ParsedTextRepository parsedInputRepo) {
         this.parsedInputRepo = parsedInputRepo;

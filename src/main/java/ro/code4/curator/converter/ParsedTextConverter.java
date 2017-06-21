@@ -28,7 +28,8 @@ public class ParsedTextConverter {
 
 		// set own properties
 		result.setId(to.getEntityId());
-        result.setText(to.getText());
+        result.setTextSourceId(to.getTextSourceId());
+        result.setTextType(to.getTextType());
         result.setReviewed(to.isReviewed());
 
 		// iterate parsed input fields
@@ -66,7 +67,8 @@ public class ParsedTextConverter {
 
 		// set own properties
 		result.setEntityId(entity.getId());
-        result.setText(entity.getText());
+        result.setTextSourceId(entity.getTextSourceId());
+        result.setTextType(entity.getTextType());
 		result.setReviewed(entity.isReviewed());
 
 		// set parsed input fields

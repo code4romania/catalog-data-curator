@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.ObjectUtils;
 import ro.code4.curator.converter.JsonUtils;
-import ro.code4.curator.transferObjects.ParsedTextTO;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -23,16 +22,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ParsedText {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private Text text;
     private String textType;
-    private String textSourceId;
-    private boolean reviewed;
 
+    private String textSourceId;
+
+    private boolean reviewed;
+    
     private int reviewedInputId;
 
     @OneToMany(mappedBy = "parsedInputId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -54,12 +54,8 @@ public class ParsedText {
      * @return
      */
     public boolean isSameText(String textSourceId, String textType) {
-        return ObjectUtils.equals(textSourceId, this.text.getTextSourceId())
-                && ObjectUtils.equals(textType, this.text.getTextType());
-    }
-
-    public boolean hasEqualFullText(ParsedTextTO parsedInputTO) {
-        return text.getFullText().trim().equals(parsedInputTO.getText().getFullText().trim());
+        return ObjectUtils.equals(textSourceId, this.getTextSourceId())
+                && ObjectUtils.equals(textType, this.getTextType());
     }
 
     public static ParsedText withId(int id) {
@@ -68,11 +64,4 @@ public class ParsedText {
         return text;
     }
 
-    public void setText(Text text) {
-        if (text == null) return;
-        
-        this.text = text;
-        setTextSourceId(text.getTextSourceId());
-        setTextType(text.getTextType());
-    }
 }
