@@ -1,14 +1,14 @@
 package ro.code4.curator.converter;
 
 import org.springframework.stereotype.Component;
-import ro.code4.curator.entity.ReviewedTextFinding;
+import ro.code4.curator.entity.ReviewedFinding;
 import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 
 @Component
 public class ReviewedTextFieldConverter {
 
-	public ReviewedTextFinding toEntity(ParsedTextFindingTO to) {
-		ReviewedTextFinding result = new ReviewedTextFinding();
+	public ReviewedFinding toEntity(ParsedTextFindingTO to) {
+		ReviewedFinding result = new ReviewedFinding();
 
 		result.setFieldName(to.getFieldName());
 		result.setParsedValue(to.getParsedValue());
@@ -19,7 +19,7 @@ public class ReviewedTextFieldConverter {
 		return result;
 	}
 
-	public ParsedTextFindingTO toTO(ReviewedTextFinding entity) {
+	public ParsedTextFindingTO toTO(ReviewedFinding entity) {
 		ParsedTextFindingTO to = new ParsedTextFindingTO();
 
 		to.setFieldName(entity.getFieldName());

@@ -1,5 +1,9 @@
 {
-  "fullText": "Text comunicat DNA, facut de Radu Jakab, data 19.04.2017, de doi lei",
+  "text": {
+    "fullText": "Text comunicat DNA, facut de Radu Jakab, data 19.04.2017, de doi lei",
+    "textSourceId": "1101",
+    "textType": "DNA"
+  },
   "parsedFields": [
     {
       "startPos": 29,

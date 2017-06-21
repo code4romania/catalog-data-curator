@@ -37,15 +37,15 @@ public class ReviewedTextServiceTest {
     }
 
     @Test
-    @Ignore // TODO carify usecase
+    @Ignore // TODO clarify usecase
     public void submitReviewedInput() throws Exception {
         ParsedTextTO reviewedFinding = new ParsedTextTO();
-        reviewedFinding.setTextSourceId("src-id");
-        reviewedFinding.setTextType("type");
+        reviewedFinding.getText().setTextSourceId("src-id");
+        reviewedFinding.getText().setTextType("type");
 
         ReviewedText value = new ReviewedText();
-        value.setTextType(reviewedFinding.getTextType());
-        value.setTextSourceId(reviewedFinding.getTextSourceId());
+        value.getText().setTextType(reviewedFinding.getText().getTextType());
+        value.getText().setTextSourceId(reviewedFinding.getText().getTextSourceId());
 
             ParsedText x = new ParsedText();
         context.checking(new Expectations() {{

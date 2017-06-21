@@ -15,7 +15,7 @@ import java.util.List;
  * Entity represents a complete text document, including the list of findings, if any.
  * Text is identified by source and type.
  * New findings can be added later as they are found by different parsers.
- *
+ * <p>
  * The text can be reviewed by a curator and have it's findings validated.
  * In this process the correct findings get votes increases.
  */
@@ -26,11 +26,13 @@ public class ParsedText {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Lob
-    private String fullText;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Text text;
     private String textType;
     private String textSourceId;
     private boolean reviewed;
+
     private int reviewedInputId;
 
     @OneToMany(mappedBy = "parsedInputId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -52,17 +54,25 @@ public class ParsedText {
      * @return
      */
     public boolean isSameText(String textSourceId, String textType) {
-        return ObjectUtils.equals(textSourceId, this.textSourceId)
-                && ObjectUtils.equals(textType, this.textType);
+        return ObjectUtils.equals(textSourceId, this.text.getTextSourceId())
+                && ObjectUtils.equals(textType, this.text.getTextType());
     }
 
     public boolean hasEqualFullText(ParsedTextTO parsedInputTO) {
-        return getFullText().trim().equals(parsedInputTO.getFullText().trim());
+        return text.getFullText().trim().equals(parsedInputTO.getText().getFullText().trim());
     }
 
     public static ParsedText withId(int id) {
         ParsedText text = new ParsedText();
         text.setId(id);
         return text;
+    }
+
+    public void setText(Text text) {
+        if (text == null) return;
+        
+        this.text = text;
+        setTextSourceId(text.getTextSourceId());
+        setTextType(text.getTextType());
     }
 }

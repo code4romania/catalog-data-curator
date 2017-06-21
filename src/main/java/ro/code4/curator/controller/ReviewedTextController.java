@@ -15,34 +15,34 @@ import java.util.List;
 public class ReviewedTextController {
 
     @Autowired
-    private ReviewedTextManager IReviewedInputService;
+    private ReviewedTextManager textReviewService;
 
     @ApiOperation(value = "createOrUpdate")
     @RequestMapping(method = RequestMethod.POST, path = "/{id}")
     public @ResponseBody
     ParsedTextTO submitReviewedInput(@PathVariable("id") int id,
                                      @RequestBody ParsedTextTO reviewedInput) {
-        return IReviewedInputService.submitReview(id, reviewedInput);
+        return textReviewService.submitReview(id, reviewedInput);
     }
 
     @ApiOperation(value = "getById")
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public @ResponseBody
     ShallowReviewedTextTO submitReviewedInput(@PathVariable("id") String id) {
-        return IReviewedInputService.getReviewById(id);
+        return textReviewService.getReviewById(id);
     }
 
     @ApiOperation(value = "deleteById")
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public @ResponseBody
     void deleteReviewedInput(@PathVariable("id") String id) {
-        IReviewedInputService.deleteReviewById(id);
+        textReviewService.deleteReviewById(id);
     }
 
     @ApiOperation(value = "getAll")
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     List<ShallowReviewedTextTO> getAll() {
-        return IReviewedInputService.getAllReviewedTexts();
+        return textReviewService.getAllReviewedTexts();
     }
 }

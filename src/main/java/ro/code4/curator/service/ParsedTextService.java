@@ -104,8 +104,10 @@ public class ParsedTextService implements ParsedTextManager {
     }
 
     private ParsedText findDuplicate(ParsedTextTO input) {
+        if (input.getText() == null) return null;
+
         List<ParsedText> existing = parsedInputRepo.findByTextTypeAndTextSourceId(
-                input.getTextType(), input.getTextSourceId());
+                input.getText().getTextType(), input.getText().getTextSourceId());
         validateMatchCount(input, existing);
 
         if (existing == null || existing.isEmpty())
@@ -118,8 +120,8 @@ public class ParsedTextService implements ParsedTextManager {
         if (existing.size() > 1) {
             // more than one match, this is an anomaly
             throw new IllegalStateException("More than one parse input found for " +
-                    "type=|" + input.getTextType()
-                    + "| and sourceId=|" + input.getTextSourceId()
+                    "type=|" + input.getText().getTextType()
+                    + "| and sourceId=|" + input.getText().getTextSourceId()
                     + "|. This is an anomaly, that needs to be corrected before submitting new parse results");
         }
     }
@@ -132,13 +134,13 @@ public class ParsedTextService implements ParsedTextManager {
     private IllegalArgumentException fullTextMismatchException(ParsedTextTO newInput,
                                                                ParsedText existingInput) {
         return new IllegalArgumentException(
-                "The full text does not match for type=|" + newInput.getTextType() +
-                        "| and sourceId=|" + newInput.getTextSourceId()
+                "The full text does not match for type=|" + newInput.getText().getTextType() +
+                        "| and sourceId=|" + newInput.getText().getTextSourceId()
                         + "|. The new input cannot be accepted because start " +
                         "and end indices will not match.\n" +
                         "Existing full text: "
-                        + existingInput.getFullText().trim() + "\n" +
-                        "New input full text: " + newInput.getFullText().trim());
+                        + existingInput.getText().getFullText().trim() + "\n" +
+                        "New input full text: " + newInput.getText().getFullText().trim());
     }
 
     public void setParsedInputRepo(ParsedTextRepository parsedInputRepo) {

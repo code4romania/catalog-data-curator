@@ -3,6 +3,7 @@ package ro.code4.curator.service;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import ro.code4.curator.entity.Text;
 import ro.code4.curator.repository.ReviewedTextRepository;
 import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 import ro.code4.curator.transferObjects.ParsedTextTO;
@@ -41,12 +42,21 @@ public class ServiceIntegrationTests {
     @Test
     @Ignore
     public void submitParsedText_submitReview_verifyMergeLogic() throws Exception {
+        ParsedTextTO parsedTextTO = withFullText(Text.with("srcId", "dna", "abc abcd"));
+        parsedTextTO = parsedTextService.submitParsedText(parsedTextTO);
+
+        ParsedTextFindingTO findingTO = ParsedTextFindingTO.with(parsedTextTO, "ab", "autor", 2, "parserId");
+        parsedTextTO.getParsedFields().add(findingTO);
+        parsedTextTO = parsedTextService.submitParsedText(parsedTextTO);
+
+//        reviewTextService.submitReview(parsedTextTO.g)
+
         fail("TODO");
     }
 
     @Test
     public void onSubmitParsedText_should_increaseVotesForDuplicateFindings() throws Exception {
-        ParsedTextTO textTo1 = withFullText("id1", "dna", "abcd");
+        ParsedTextTO textTo1 = withFullText(Text.with("id1", "dna", "abcd"));
         ParsedTextFindingTO finding1 = with(
                 null, "b", "nume", 1, "test-parser");
         textTo1.getParsedFields().add(finding1);
@@ -55,7 +65,7 @@ public class ServiceIntegrationTests {
         assertEquals("should contain all findings",
                 1, round(parsedFields1.get(0).getVotes()));
 
-        ParsedTextTO textTO2 = withFullText("id1", "dna", "abcd");
+        ParsedTextTO textTO2 = withFullText(Text.with("id1", "dna", "abcd"));
         ParsedTextFindingTO finding2 = with(
                 null, "b", "nume", 1, "test-parser");
         textTO2.getParsedFields().add(finding2);
@@ -69,7 +79,7 @@ public class ServiceIntegrationTests {
 
     @Test
     public void onSubmitParsedText_should_mergeFindingsForDuplicates() throws Exception {
-        ParsedTextTO textTo1 = withFullText("id1", "dna", "abcd");
+        ParsedTextTO textTo1 = withFullText(Text.with("id1", "dna", "abcd"));
         ParsedTextFindingTO finding1 = with(
                 null, "b", "nume", 1, "test-parser");
         textTo1.getParsedFields().add(finding1);
@@ -79,7 +89,7 @@ public class ServiceIntegrationTests {
         assertEquals("should contain all findings",
                 1, parsedTextService.getAllParsedTexts().get(0).getParsedFields().size());
 
-        ParsedTextTO textTO2 = withFullText("id1", "dna", "abcd");
+        ParsedTextTO textTO2 = withFullText(Text.with("id1", "dna", "abcd"));
         ParsedTextFindingTO finding2 = with(
                 null, "c", "nume", 2, "test-parser");
         textTO2.getParsedFields().add(finding2);
@@ -96,8 +106,8 @@ public class ServiceIntegrationTests {
 
     @Test
     public void should_mergeDuplicates_submittedParsedText() throws Exception {
-        ParsedTextTO textTO1 = withFullText("id1", "dna", "abcd");
-        ParsedTextTO textTO2 = withFullText("id1", "dna", "abcd");
+        ParsedTextTO textTO1 = withFullText(Text.with("id1", "dna", "abcd"));
+        ParsedTextTO textTO2 = withFullText(Text.with("id1", "dna", "abcd"));
         ParsedTextTO out1 = parsedTextService.submitParsedText(textTO1);
         ParsedTextTO out2 = parsedTextService.submitParsedText(textTO2);
         assertEquals("both parsed texts should be duplicates", out1.getEntityId(), out2.getEntityId());

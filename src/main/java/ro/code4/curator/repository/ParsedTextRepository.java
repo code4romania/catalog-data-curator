@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ParsedTextRepository extends CrudRepository<ParsedText, Serializable> {
+
 	List<ParsedText> findByTextTypeAndTextSourceId(String textType, String textSourceId);
+
 }

@@ -22,7 +22,6 @@ import ro.code4.curator.transferObjects.ShallowReviewedTextTO;
 import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ro.code4.curator.TestUtils.parseJsonObj;
@@ -54,10 +53,10 @@ public class ReviewedTextControllerIntegrationTest {
 
         final ShallowReviewedTextTO[] foundR1 = getReview(persistedR1);
 
-        assertEquals(finding1.getFullText(), persistedR1[0].getFullText());
-        assertEquals(review.getFullText(), persistedR1[0].getFullText());
-        assertEquals(foundR1[0].getTextSourceId(), persistedR1[0].getTextSourceId());
-        assertEquals(foundR1[0].getTextType(), persistedR1[0].getTextType());
+        assertEquals(finding1.getText().getFullText(), persistedR1[0].getText().getFullText());
+        assertEquals(review.getText().getFullText(), persistedR1[0].getText().getFullText());
+        assertEquals(foundR1[0].getTextSourceId(), persistedR1[0].getText().getTextSourceId());
+        assertEquals(foundR1[0].getTextType(), persistedR1[0].getText().getTextType());
 
         // delete review
         deleteReview(foundR1[0]);
@@ -84,13 +83,13 @@ public class ReviewedTextControllerIntegrationTest {
         final ShallowReviewedTextTO[] foundR1 = getReview(persistedR1);
         final ShallowReviewedTextTO[] foundR2 = getReview(persistedR2);
 
-        assertEquals(finding1.getFullText(), persistedR1[0].getFullText());
-        assertEquals(review.getFullText(), persistedR1[0].getFullText());
-        assertEquals(review.getFullText(), persistedR2[0].getFullText());
-        assertEquals(foundR1[0].getTextSourceId(), persistedR1[0].getTextSourceId());
-        assertEquals(foundR1[0].getTextType(), persistedR1[0].getTextType());
-        assertEquals(foundR1[1].getTextSourceId(), persistedR1[1].getTextSourceId());
-        assertEquals(foundR1[1].getTextType(), persistedR1[1].getTextType());
+        assertEquals(finding1.getText().getFullText(), persistedR1[0].getText().getFullText());
+        assertEquals(review.getText().getFullText(), persistedR1[0].getText().getFullText());
+        assertEquals(review.getText().getFullText(), persistedR2[0].getText().getFullText());
+        assertEquals(foundR1[0].getTextSourceId(), persistedR1[0].getText().getTextSourceId());
+        assertEquals(foundR1[0].getTextType(), persistedR1[0].getText().getTextType());
+        assertEquals(foundR1[1].getTextSourceId(), persistedR1[1].getText().getTextSourceId());
+        assertEquals(foundR1[1].getTextType(), persistedR1[1].getText().getTextType());
 
         // delete review
         deleteReview(foundR1[0]);

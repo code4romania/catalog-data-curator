@@ -3,8 +3,8 @@ package ro.code4.curator.converter;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ro.code4.curator.entity.TextFinding;
 import ro.code4.curator.entity.ParsedText;
+import ro.code4.curator.entity.TextFinding;
 import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 import ro.code4.curator.transferObjects.ParsedTextTO;
 
@@ -28,10 +28,8 @@ public class ParsedTextConverter {
 
 		// set own properties
 		result.setId(to.getEntityId());
-		result.setTextSourceId(to.getTextSourceId());
-		result.setTextType(to.getTextType());
-		result.setFullText(to.getFullText());
-		result.setReviewed(to.isReviewed());
+        result.setText(to.getText());
+        result.setReviewed(to.isReviewed());
 
 		// iterate parsed input fields
 		Map<ParsedTextFindingTO, TextFinding> fieldsMapping = new HashMap<>();
@@ -68,9 +66,7 @@ public class ParsedTextConverter {
 
 		// set own properties
 		result.setEntityId(entity.getId());
-		result.setFullText(entity.getFullText());
-		result.setTextSourceId(entity.getTextSourceId());
-		result.setTextType(entity.getTextType());
+        result.setText(entity.getText());
 		result.setReviewed(entity.isReviewed());
 
 		// set parsed input fields

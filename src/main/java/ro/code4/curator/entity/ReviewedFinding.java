@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-public class ReviewedTextFinding {
+public class ReviewedFinding {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -18,7 +18,7 @@ public class ReviewedTextFinding {
 	private ReviewedText reviewedInputId;
 
 	@OneToOne
-	private ReviewedTextFinding parentField;
+	private ReviewedFinding parentField;
 
 	private String fieldName;
 	private int startPos;

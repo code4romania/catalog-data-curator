@@ -3,7 +3,7 @@ package ro.code4.curator.converter;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import ro.code4.curator.entity.ReviewedText;
-import ro.code4.curator.entity.ReviewedTextFinding;
+import ro.code4.curator.entity.ReviewedFinding;
 import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 import ro.code4.curator.transferObjects.ParsedTextTO;
 import ro.code4.curator.transferObjects.ShallowReviewedTextTO;
@@ -21,15 +21,13 @@ public class ReviewedTextConverter {
 
 		// set own properties
 		result.setId(to.getEntityId());
-		result.setTextSourceId(to.getTextSourceId());
-		result.setTextType(to.getTextType());
-		result.setFullText(to.getFullText());
+        result.setText(to.getText());
 
 		// iterate parsed input fields
-		Map<ParsedTextFindingTO, ReviewedTextFinding> fieldsMapping = new HashMap<>();
+		Map<ParsedTextFindingTO, ReviewedFinding> fieldsMapping = new HashMap<>();
 		ReviewedTextFieldConverter fieldConverter = new ReviewedTextFieldConverter();
 		for (ParsedTextFindingTO fieldTO : to.getParsedFields()) {
-			ReviewedTextFinding convertedField = fieldConverter.toEntity(fieldTO);
+			ReviewedFinding convertedField = fieldConverter.toEntity(fieldTO);
 			convertedField.setReviewedInputId(result);
 			result.getReviewedFields().add(convertedField);
 			fieldsMapping.put(fieldTO, convertedField);
@@ -40,7 +38,7 @@ public class ReviewedTextConverter {
 			if (fieldTO.getParentFieldName() != null && !fieldTO.getParentFieldName().isEmpty()) {
 				// find the parent field
 				boolean found = false;
-				for (ReviewedTextFinding parentCandidate : result.getReviewedFields())
+				for (ReviewedFinding parentCandidate : result.getReviewedFields())
 					if (fieldTO.getParentFieldName().equals(parentCandidate.getFieldName())) {
 						fieldsMapping.get(fieldTO).setParentField(parentCandidate);
 						found = true;
@@ -61,13 +59,11 @@ public class ReviewedTextConverter {
 
 		// set own properties
 		result.setEntityId(entity.getId());
-		result.setFullText(entity.getFullText());
-		result.setTextSourceId(entity.getTextSourceId());
-		result.setTextType(entity.getTextType());
+		result.setText(entity.getText());
 
 		// set parsed input fields
 		ReviewedTextFieldConverter fieldConverter = new ReviewedTextFieldConverter();
-		for (ReviewedTextFinding field : entity.getReviewedFields()) {
+		for (ReviewedFinding field : entity.getReviewedFields()) {
 			ParsedTextFindingTO fieldTO = fieldConverter.toTO(field);
 			result.getParsedFields().add(fieldTO);
 		}
@@ -79,8 +75,8 @@ public class ReviewedTextConverter {
 		ShallowReviewedTextTO result = new ShallowReviewedTextTO();
 
 		result.setId(entity.getId());
-		result.setTextSourceId(entity.getTextSourceId());
-		result.setTextType(entity.getTextType());
+		result.setTextSourceId(entity.getText().getTextSourceId());
+		result.setTextType(entity.getText().getTextType());
 
 		return result;
 	}

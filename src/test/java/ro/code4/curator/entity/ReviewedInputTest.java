@@ -14,11 +14,11 @@ public class ReviewedInputTest {
     public void verifyNoCircularReferenceProblems() throws Exception {
         ReviewedText input = new ReviewedText();
 
-        ReviewedTextFinding parentField = new ReviewedTextFinding();
+        ReviewedFinding parentField = new ReviewedFinding();
         input.getReviewedFields().add(parentField);
         parentField.setReviewedInputId(input);
 
-        ReviewedTextFinding field = new ReviewedTextFinding();
+        ReviewedFinding field = new ReviewedFinding();
         field.setReviewedInputId(input);
         field.setParentField(parentField);
 
@@ -29,8 +29,8 @@ public class ReviewedInputTest {
 
     @Test
     public void verifyNoCircularReferenceProblems_fieldParent() throws Exception {
-        ReviewedTextFinding parent = new ReviewedTextFinding();
-        ReviewedTextFinding child = new ReviewedTextFinding();
+        ReviewedFinding parent = new ReviewedFinding();
+        ReviewedFinding child = new ReviewedFinding();
 
         child.setParentField(parent);
         parent.setParentField(child);

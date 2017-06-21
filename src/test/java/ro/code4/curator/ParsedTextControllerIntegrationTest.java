@@ -112,15 +112,15 @@ public class ParsedTextControllerIntegrationTest {
         assertEquals("should be fully equal",
                 foundFinding[0], persistedFinding[0]);
         assertEquals("all equal except entityId",
-                foundFinding[0].getFullText(), originalFinding.getFullText());
+                foundFinding[0].getText().getFullText(), originalFinding.getText().getFullText());
         assertEquals("all equal except entityId",
                 3, foundFinding[0].getParsedFields().size());
         assertEquals("all equal except entityId",
                 foundFinding[0].getParsedFields(), originalFinding.getParsedFields());
         assertEquals("all equal except entityId",
-                foundFinding[0].getTextSourceId(), originalFinding.getTextSourceId());
+                foundFinding[0].getText().getTextSourceId(), originalFinding.getText().getTextSourceId());
         assertEquals("all equal except entityId",
-                foundFinding[0].getTextType(), originalFinding.getTextType());
+                foundFinding[0].getText().getTextType(), originalFinding.getText().getTextType());
 
 
         // delete finding

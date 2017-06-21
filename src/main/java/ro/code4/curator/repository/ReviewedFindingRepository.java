@@ -1,13 +1,12 @@
 package ro.code4.curator.repository;
 
-import java.io.Serializable;
-
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import ro.code4.curator.entity.ReviewedFinding;
 
-import ro.code4.curator.entity.ReviewedTextFinding;
+import java.io.Serializable;
 
 @Repository
-public interface ReviewedFindingRepository extends CrudRepository<ReviewedTextFinding, Serializable> {
+public interface ReviewedFindingRepository extends CrudRepository<ReviewedFinding, Serializable> {
 
 }

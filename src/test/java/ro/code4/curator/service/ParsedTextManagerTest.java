@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.code4.curator.Application;
 import ro.code4.curator.entity.ParsedTextManager;
+import ro.code4.curator.entity.Text;
 import ro.code4.curator.transferObjects.ParsedTextFindingTO;
 import ro.code4.curator.transferObjects.ParsedTextTO;
 
@@ -64,19 +65,21 @@ public class ParsedTextManagerTest {
         fieldTO.setParserId("parser-inculpat");
         fieldTO.setStartPos(fullText.indexOf(parsedText));
         fieldTO.setEndPos(fullText.indexOf(parsedText) + parsedText.length());
+        Text text = new Text();
+        text.setTextType("Dosar");
+        text.setTextSourceId("DNA");
+        text.setFullText(fullText);
         ParsedTextTO entry = new ParsedTextTO();
-        entry.setTextType("Dosar");
-        entry.setTextSourceId("DNA");
+        entry.setText(text);
         entry.setReviewed(true);
-        entry.setFullText(fullText);
         entry.setParsedFields(asList(fieldTO));
 
         ParsedTextTO savedEntry = service.submitParsedText(entry);
 
         // compare original to returned obj on save operation
-        assertEquals(fullText, savedEntry.getFullText());
-        assertEquals("DNA", savedEntry.getTextSourceId());
-        assertEquals("Dosar", savedEntry.getTextType());
+        assertEquals(fullText, savedEntry.getText().getFullText());
+        assertEquals("DNA", savedEntry.getText().getTextSourceId());
+        assertEquals("Dosar", savedEntry.getText().getTextType());
         assertTrue(savedEntry.isReviewed());
         assertEquals(1, savedEntry.getParsedFields().size());
         ParsedTextFindingTO to = savedEntry.getParsedFields().get(0);
@@ -91,9 +94,9 @@ public class ParsedTextManagerTest {
         ParsedTextTO se = service.getAllParsedTexts().get(0);
 
         // compare retrieve result with save obj
-        assertEquals(savedEntry.getFullText(), se.getFullText());
-        assertEquals(savedEntry.getTextSourceId(), se.getTextSourceId());
-        assertEquals(savedEntry.getTextType(), se.getTextType());
+        assertEquals(savedEntry.getText().getFullText(), se.getText().getFullText());
+        assertEquals(savedEntry.getText().getTextSourceId(), se.getText().getTextSourceId());
+        assertEquals(savedEntry.getText().getTextType(), se.getText().getTextType());
         assertTrue(se.isReviewed());
         assertEquals(savedEntry.getParsedFields().size(), se.getParsedFields().size());
         ParsedTextFindingTO seto = savedEntry.getParsedFields().get(0);
