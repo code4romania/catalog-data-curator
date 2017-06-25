@@ -1,5 +1,9 @@
 {
-  "fullText": "No parsed fields",
+  "text": {
+    "fullText": "No parsed fields",
+    "textSourceId": "1101",
+    "textType": "DNA"
+  },
   "parsedFields": [ ],
   "textSourceId": "1101",
   "textType": "DNA"

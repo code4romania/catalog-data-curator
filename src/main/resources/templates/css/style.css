@@ -1,0 +1,30 @@
+a#name {
+    //font-size: large;
+    color: darkblue
+}
+
+a#acuzation {
+    //font-size: large;
+    color: red
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#findings > thead > tr > td:nth-child(1) {
+    width: 100px;
+}
+
+#findings > thead > tr > td:nth-child(2) {
+    width: 100px;
+}
+

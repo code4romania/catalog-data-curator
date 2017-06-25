@@ -1,16 +1,17 @@
 #!/bin/sh
 
-if [ ! -f application.properties ]; then
+C4HOME=/var/parser
+C4HOME=/Users/mircea/Workspace/git/c4curator/catalog-data-curator
+
+if [ ! -f $C4HOME/bin/application.properties ]; then
     echo "linking to config file"
-    ln -s /var/parser/src/main/resources/application.properties /var/parser/bin/application.properties
+    ln -s $C4HOME/src/main/resources/application.properties $C4HOME/bin/application.properties
 fi
 
-if [ ! -f /var/parser/target/c4-curator-0.1.0.jar ]; then
-    echo "missing app file, will need to rebuild"
-    /var/parser/bin/build.sh
-fi
-
-echo "starting app..."
-java -jar /var/parser/target/c4-curator-0.1.0.jar &
+echo "starting exploded app..."
+cd $C4HOME
+mvn clean package -DskipTests
+# app cannot start bundled as one jar file. It contains /mock folder so we need to run it exploded
+mvn spring-boot:run &
 
 echo Done

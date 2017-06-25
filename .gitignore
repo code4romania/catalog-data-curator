@@ -5,4 +5,9 @@
 .classpath
 .project
 .idea/
+*.ipr
+*.iws
 *.iml
+.DS_Store
+bin/application.properties
+bin/c4curator-new.tgz

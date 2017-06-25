@@ -70,6 +70,13 @@ public class LoginTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser
+    public void accessSecuredResourceAuthenticatedThenOk_swaggerAPIdoc() throws Exception {
+        mockMvc.perform(get("/swagger-ui.html"))
+                .andExpect(status().isOk());
+    }
+
     private User getTestUser() {
         return testData.getTestUser();
     }

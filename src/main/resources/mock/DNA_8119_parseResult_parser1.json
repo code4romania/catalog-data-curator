@@ -1,0 +1,21 @@
+{
+  "textSourceId": "8119",
+  "textType": "DNA",
+  "parsedFields": [
+    {
+      "startPos": 603,
+      "endPos": 625,
+      "fieldName": "name",
+      "parsedValue": "ANDRONIC DAN - CĂTĂLIN",
+      "parserId": "name scrapper"
+    },
+    {
+      "startPos": 711,
+      "endPos": 761,
+      "fieldName": "acuzation",
+      "parsedValue": "mărturie mincinoasă;   - favorizarea făptuitorului",
+      "parserId": "acuzation scrapper"
+    }
+  ]
+}
+
