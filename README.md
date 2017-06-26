@@ -23,4 +23,7 @@ Note that exact version/name might change
 See ./src/main/resources/application.properties
 http://localhost.ingenuity.com:8080/c4curator
 http://localhost.ingenuity.com:8080/c4curator/swagger-ui.html#/
+
+Wiki  https://codeforromania.atlassian.net/wiki/spaces/CP
+Issue tracker https://codeforromania.atlassian.net/browse/CP
 ```
