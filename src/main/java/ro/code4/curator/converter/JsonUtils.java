@@ -1,10 +1,8 @@
 package ro.code4.curator.converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created on 4/30/17.
