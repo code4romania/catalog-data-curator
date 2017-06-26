@@ -63,12 +63,14 @@ public class MockData {
 
     @PostConstruct
     public void initDummyData() {
+        log.info("inserting test user (user=user, password=password)");
+        userRepository.save(getTestUser());
+
         if (!isEnabled) {
             return;
         }
 
         log.info("inserting test data...");
-        userRepository.save(getTestUser());
 
         addParsedInput();
 
