@@ -9,18 +9,18 @@ Java 8 SE
 ### Build it
 ```
 In the root folder, run mvn -clean install
-If successful, this will create ./target/parsedTextReviewer.jar
+If successful, this will create target/c4-curator-0.1.0.jar
 ```
 
 ### Run it
 ```
-Change dir to ./target
-Run java -jar parsedTextReviewer.jar
+Run java -jar target/c4-curator-0.1.0.jar    
+Note that exact version/name might change
 ```
 
-### Configuration
+### Configuration / Links
 ```
 See ./src/main/resources/application.properties
-Default context is /parsedTextReview
-Default port is 8080
+http://localhost.ingenuity.com:8080/c4curator
+http://localhost.ingenuity.com:8080/c4curator/swagger-ui.html#/
 ```
